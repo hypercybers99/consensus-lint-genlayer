@@ -112,6 +112,27 @@ class TestHygieneBadgesContract(unittest.TestCase):
         self.assertEqual(len(b2["badge_history"]), 2)
         self.assertEqual(b2["badge_history"][-1]["transition"], "IMPROVED")
 
+    def test_claim_badge_refuses_truncated_audit(self):
+        self.badges.set_ledger(self.ledger_addr)
+        url_large = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/shell_like.py"
+        self.ledger.register_target("ShellLike Large", "fixtures", url_large)
+        tid_large = json.loads(self.ledger.list_target_ids(0, 1))[0]
+
+        with open("fixtures-local/contracts/shell_like.py", "rb") as f:
+            large_bytes = f.read()
+        gl.nondet.web.pages[url_large] = large_bytes
+
+        gl.message_raw = {"datetime": "2026-10-18T13:00:00Z"}
+        self.ledger.audit_target(tid_large)
+
+        summary = json.loads(self.ledger.get_target_summary(tid_large))
+        self.assertTrue(summary["truncated"])
+
+        # Claim badge should be rejected
+        with self.assertRaises(gl.vm.UserError) as ctx:
+            self.badges.claim_badge(tid_large, "Truncated Badge Attempt")
+        self.assertEqual(str(ctx.exception), "cannot claim badge for truncated audit")
+
 
 if __name__ == "__main__":
     unittest.main()

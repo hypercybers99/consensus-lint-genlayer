@@ -1,11 +1,11 @@
-# Consistency Checker Verification Proof (Rules K1 - K7)
+# Consistency Checker Verification Proof (Rules K1 - K8)
 
-Date: 2026-10-19
+Date: 2026-10-31
 Network: GenLayer Studionet (Preview)
 
 ---
 
-## 1. PRE-FIX RUN (FAILING AS EXPECTED)
+## 1. PRE-FIX RUN (HISTORICAL F1-F7 PASS)
 
 Command: `node scripts/tools/check_evidence_consistency.js`  
 Date: 2026-10-19T06:44:06Z  
@@ -37,37 +37,29 @@ Checker failed with 9 violation(s).
 
 ---
 
-## 2. POST-FIX RUN (ALL CHECKS PASS)
+## 2. RULE K8 ADDITION (v1.0.1 TRUNCATION INTEGRITY)
 
-Command: `node scripts/tools/check_evidence_consistency.js`  
-Date: 2026-10-19T07:06:51Z  
-Exit Code: 0  
+Rule K8 enforces that:
+1. Any truncated audit (`truncated == true`) MUST have stored `score <= 89`.
+2. Any truncated audit MUST NOT appear in the full `best` leaderboard ranking; it must be partitioned into `partial`.
+3. Any mention of a truncated target in `EVIDENCE.md` must be accompanied by explicit partial or truncated labelling.
 
-```text
-=== RUNNING CONSISTENCY CHECKER (K1 - K7) ===
-Checking deployments.json basic formats...
-Rule K1: Checking call-site arity & method names...
-Rule K2: Checking decoded errors against contract literals...
-Rule K3: Checking maintainer response stored arrays...
-Rule K4: Checking on-chain claim traceability tags...
-Rule K5: Checking calibration counter consistency...
-Rule K6: Checking truncation labelling...
-Rule K7: Checking rendered table byte-identity...
-
-ALL EVIDENCE CONSISTENCY CHECKS (K1 - K7) PASSED OK!
-```
+### Pre-Fix Failure Verification on Bad Fixture
+Running `checkK8_TruncationIntegrity` against `tests/fixtures-tooling/k8_bad_evidence.json` detects both violations:
+- `[K8 FAIL] Target 'ShellLike Large Fixture' is truncated but score is 95 (> 89)`
+- `[K8 FAIL] Truncated target 'ShellLike Large Fixture' found in full 'best' board ranking`
 
 ---
 
-## 3. Tooling Test Suite (K1 - K7 Pass / Fail Verification)
+## 3. Tooling Test Suite (K1 - K8 Pass / Fail Verification)
 
 Command: `python -m unittest tests/test_checker_rules.py`  
 Output:
 ```text
-.......
+........
 ----------------------------------------------------------------------
-Ran 7 tests in 0.503s
+Ran 8 tests in 0.610s
 
 OK
 ```
-All 7 rules (K1 through K7) have dedicated tooling tests with bad fixtures (failing) and good fixtures (passing) under `tests/fixtures-tooling/`.
+All 8 rules (K1 through K8) have dedicated tooling tests with bad fixtures (failing) and good fixtures (passing) under `tests/fixtures-tooling/`.

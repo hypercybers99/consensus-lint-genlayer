@@ -9,7 +9,7 @@ import hashlib
 import urllib.parse
 from typing import Dict, List, Tuple, Any, Optional
 
-MAX_SOURCE_BYTES = 60000
+MAX_SOURCE_BYTES = 120000
 MAX_FUNCTION_EXCERPT_LINES = 80
 SNIPPET_MAX = 160
 MAX_FINDINGS_STORED_PER_RULE = 5
@@ -848,6 +848,7 @@ def build_model_prompt(call_sites: List[Dict[str, Any]]) -> str:
         "  Labels: RECOMPUTES / COMPARES_ONLY / UNCLEAR",
         "- J2: What does the acceptance test compare?",
         "  Labels: ENUM_OR_BUCKET / FREE_TEXT_OR_PAYLOAD / UNCLEAR",
+        "  Note: Comparing a computed hash or digest (such as hashlib.sha256(...).hexdigest()) to an expected hash is deterministic and MUST be labeled ENUM_OR_BUCKET, NOT FREE_TEXT_OR_PAYLOAD.",
         "For Prompt Excerpts (kind: EXEC_PROMPT):",
         "- J3: Is untrusted input isolated from instructions (delimiters AND statement that content is data)?",
         "  Labels: ISOLATED / PARTIAL / NOT_ISOLATED / UNCLEAR",

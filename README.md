@@ -51,9 +51,16 @@ Deployed and active on **GenLayer Studionet (Preview)** (Chain ID `61999`, RPC `
 
 | Contract | Address | Status | Source SHA-256 |
 |---|---|---|---|
-| **ConsensusLint** | `0xE2cBaf1916Df7C742486B2eC4E5d3A3289115F2D` | Active | `04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b` |
-| **HygieneBadges** | `0x3CA9E1b7804b442eaA932ae190d494D4A59295bF` | Active | `64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8` |
-| **Probe (superseded diagnostic)** | `0xCAF2c7cdBD0a6EB4154b763c9fA869407CcCb7b6` | Superseded Diagnostic | `35de2f50206bac0addafb711623795519d8f67efd631e0388b49e9b8c425989b` |
+| **ConsensusLint** | `0xDd9c4b5d187664780142f24E4327D48Db59363D7` | Active (v1.0.1) | `ce592840fda0a61d2f3d0ea39aaaa5ba2c6da0929ee9a6a7654cf7e74c0d3e25` |
+| **HygieneBadges** | `0xbd8d4F05423Dd98e2A1F911A371911c1671Eb140` | Active (v1.0.1) | `6d2a48275d31556f42ac8fed0b0c91ecace9300e3f60592643b5bf98e3009923` |
+
+### Superseded Deployments
+| Contract | Address | Superseded On | Reason |
+|---|---|---|---|
+| ConsensusLint (v1.0.0) | `0xE2cBaf1916Df7C742486B2eC4E5d3A3289115F2D` | 2026-10-31 | Superseded by v1.0.1 (truncation capping, board separation, J2 prompt note) |
+| HygieneBadges (v1.0.0) | `0x3CA9E1b7804b442eaA932ae190d494D4A59295bF` | 2026-10-31 | Superseded by v1.0.1 (refusal of badge minting for truncated audits) |
+| Probe (diagnostic) | `0xCAF2c7cdBD0a6EB4154b763c9fA869407CcCb7b6` | 2026-10-30 | Superseded initial deployment probe |
+| ConsensusLint (v0) | `0xdbb2a19163deba1DacDbC2C719D660bA1CDe3130` | 2026-10-30 | Superseded initial release |
 
 ---
 
@@ -94,43 +101,39 @@ The hygiene score begins at 100 and applies deducted weights per rule with per-r
 - **Grade F**: 0 - 59 (Failed structural requirements or `NOT_A_CONTRACT`)
 
 Dogfooding result:
-- `ConsensusLint.py` (66,505 bytes > `MAX_SOURCE_BYTES` 60,000) was linted on-chain up to byte 60,000; it scored **94**, with grade capped at **Grade B** due to truncation. The remaining tail (lines 1287-1438, 6,505 bytes), containing view methods, was not linted on-chain and was verified locally with `scripts/tools/lint_tail.py` as a **LOCAL** run (**100**, Grade A, 0 findings).
-- `HygieneBadges.py` (10,951 bytes) was fully linted on-chain and scored **Grade A (100)** with 0 findings.
+- Under v1.0.1 with `MAX_SOURCE_BYTES = 120000`, `ConsensusLint.py` (66,505 bytes) is **100% analyzed on-chain without truncation** (`truncated: false`), scoring **94** (Grade A) with 0 unlinted tail.
+- `HygieneBadges.py` (22,866 bytes) is also 100% analyzed on-chain (`truncated: false`), scoring **94** (Grade A).
 
 ---
 
-## 6. Known Limitations
+## 6. Known Limitations & v1.0.1 Calibrations
 
-1. **Static Linter, Not a Security Audit**: ConsensusLint inspects code patterns against an 18-rule catalogue for a specific pinned GenLayer SDK version (`py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6`). It cannot prove that a contract is secure, bug-free, or mathematically correct.
-2. **Heuristic Rule Imperfections**: Rules CL06, CL07, CL12, and CL15-CL18 use AST and regex heuristics which may produce false positives or false negatives on complex or non-idiomatic Python constructs.
-3. **Model Layer Bounded Penalties & Observed False Positives**: The model layer can lower a score by up to 20 points (`MODEL_PENALTY_CAP`). On-chain observations:
-   - **GoodContract Fixture**: Lost 6 points on question J2 (`FREE_TEXT_OR_PAYLOAD`) for the line `return val_sand.calldata == ldata.get("sha256")`, a model false positive on a deterministic SHA-256 digest comparison (score 94 instead of 100).
-   - **ConsensusLint Self-Lint**: Lost 4 points on question J3 (`NOT_ISOLATED`) citing `def prompt_call(): return gl.nondet.exec_prompt(prompt_text)`, which quoted the call site rather than prompt template assembly.
-4. **Source Code Truncation**: Files exceeding `MAX_SOURCE_BYTES` (60,000 bytes) are linted only up to the last complete line within the first 60,000 bytes. The grade is capped at **Grade B**, while the score is NOT capped (`_compute_score_and_penalty`). The stored `source_sha256` represents the hash of the truncated text:
-   - **ShellLike Large Fixture** (196,016 bytes): Score 100 on the first 30% of bytes; capped at Grade B.
-   - **ConsensusLint.py** (66,505 bytes): Truncated at line 1286; tail view methods unlinted on-chain.
-5. **Leaderboard & Badges Truncation Behaviour**:
-   - `ConsensusLint.get_board("best")` ranks by score and does not exclude truncated audits (ShellLike ranks #1 with score 100).
-   - `HygieneBadges` does not inspect the `truncated` flag from the ledger summary; a `BADGE_B` for ConsensusLint was issued from a truncated audit.
-6. **Mutable References**: While `PINNED_COMMIT` refs guarantee immutable source targets, mutable refs (`main` branch) can change between registration and audit time.
-7. **URL & Host Policy**: Only `https://raw.githubusercontent.com/<owner>/<repo>/<ref>/<path>.py` is accepted by `ConsensusLint.register_target`.
-8. **Consensus Majority**: Consensus on Studionet is typically majority (3 of 5 validators). Non-deterministic or high-latency operations can produce `UNDETERMINED` (`MAJORITY_DISAGREE`) consensus outcomes, as observed on CitationWatch v1.2.0 audit attempt 1.
+1. **Static Linter, Not a Security Audit**: ConsensusLint inspects code patterns against an 18-rule catalogue for a specific pinned GenLayer SDK version (`py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6`). It cannot prove that a contract is bug-free or free of risk patterns.
+2. **Heuristic Rule Imperfections**: Rules CL06, CL07, CL12, and CL15-CL18 use AST heuristics which may produce false positives or false negatives on complex or non-idiomatic Python constructs.
+3. **Model Layer Bounded Penalties & Calibrations**: The model layer can lower a score by up to 20 points (`MODEL_PENALTY_CAP`).
+   - In v1.0.1, the J2 prompt was explicitly clarified with a short example that comparing a computed SHA-256 digest to an expected digest (`hashlib.sha256(...).hexdigest() == expected`) is deterministic and MUST be classified as `ENUM_OR_BUCKET`. As confirmed on-chain on Studionet, GoodContract now receives 0 penalty on J2 and achieves Score 100 (Grade A).
+4. **Source Code Truncation & Integrity**: Files exceeding `MAX_SOURCE_BYTES` (120,000 bytes) are linted up to the last complete line within 120,000 bytes.
+   - Under v1.0.1, the stored hygiene score for truncated audits is strictly capped at **89** in addition to the grade being capped at **Grade B**.
+   - `ConsensusLint.get_board("best")` partitions truncated audits into a separate `partial` array so that only full audits appear in the full leaderboard ranking.
+   - `HygieneBadges.claim_badge` strictly refuses badge claims for truncated audits (`raise gl.vm.UserError("cannot claim badge for truncated audit")`).
+5. **Mutable References**: While `PINNED_COMMIT` refs guarantee immutable source targets, mutable refs (`main` branch) can change between registration and audit time.
+6. **URL & Host Policy**: Only `https://raw.githubusercontent.com/<owner>/<repo>/<ref>/<path>.py` is accepted by `ConsensusLint.register_target`.
+7. **Consensus Majority**: Consensus on Studionet is typically majority (3 of 5 validators). Non-deterministic or high-latency operations can produce `UNDETERMINED` (`MAJORITY_DISAGREE`) consensus outcomes, as observed on CitationWatch v1.2.0 audit attempt 1.
 
 ---
 
 ## 7. Evidence Boundaries: Observed On-Chain vs Unit-Tested Only
 
-### Observed on-chain on active deployment (`0xE2cBaf...` & `0x3CA9E1...`):
-- Contract deployments (ConsensusLint, HygieneBadges, set_ledger)
-- Positive fixture audits (GoodContract, BadContract, MixedContract, NotAContract, ShellLike)
-- Dogfooding self-lints (ConsensusLint truncated, HygieneBadges complete)
-- Longitudinal progress tracking (EvolvingContract v1 to v2, get_progress)
+### Observed on-chain on active deployment (`0xDd9c4b...` & `0xbd8d4F...`):
+- Contract deployments (ConsensusLint `0xDd9c4b5d187664780142f24E4327D48Db59363D7`, HygieneBadges `0xbd8d4F05423Dd98e2A1F911A371911c1671Eb140`, `set_ledger`)
+- Positive fixture audits (GoodContract 100, BadContract 0, MixedContract 86, NotAContract -1, ShellLike 89 capped)
+- Dogfooding self-lints (ConsensusLint 100% analyzed / not truncated, HygieneBadges 100% analyzed / not truncated)
 - Maintainer response flow (5-argument `respond_to_finding`, verified non-empty stored responses array)
-- HygieneBadges issuance & cross-contract queries (`claim_badge`, `get_badge`)
-- Decoded negative reverts (`NEG-01` to `NEG-07`, verbatim UserError literals and raw base64 leader bytes)
-- Real-world historical audits on-chain (CitationWatch v1.0.0, v1.1.0, v1.2.0, CommitmentLedger v3.1.0)
-- Observed validator disagreement (CitationWatch v1.2.0 attempt 1: `status: UNDETERMINED`, `result_name: MAJORITY_DISAGREE`, agreement 2/5)
-- Public ledger aggregations (`get_board`, `get_rule_stats`, `list_target_ids`, `list_series`)
+- HygieneBadges issuance & query (`claim_badge`, `get_badge`)
+- HygieneBadges refusal on truncated audits (`NEG-BADGE-TRUNC`)
+- Decoded negative reverts (`NEG-RESP-01`, `NEG-RESP-02`, `NEG-RESP-03`, `NEG-BADGE-TRUNC`, verbatim UserError literals and raw base64 leader bytes)
+- Real-world historical audits on-chain (CitationWatch v1.0.0, CitationWatch v1.2.0, CommitmentLedger v3.1.0)
+- Public ledger aggregations with truncation partitioning (`get_board`, `get_target_summary`, `list_target_ids`)
 
 ### Unit-tested only (until proven on-chain):
 - Response count limit rejection (`MAX_RESPONSES_PER_AUDIT = 10`)

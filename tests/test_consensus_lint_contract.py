@@ -139,6 +139,57 @@ class TestConsensusLintContract(unittest.TestCase):
         self.assertGreater(prog2["score_delta"], 0)
         self.assertEqual(prog2["grade_after"], "A")
 
+    def test_truncated_score_capped_at_89_and_board_separation(self):
+        # Register a target with content > 120,000 bytes
+        url_large = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/shell_like.py"
+        self.contract.register_target("ShellLike Large", "fixtures", url_large)
+        tid_large = json.loads(self.contract.list_target_ids(0, 1))[0]
+
+        with open("fixtures-local/contracts/shell_like.py", "rb") as f:
+            large_bytes = f.read()
+        gl.nondet.web.pages[url_large] = large_bytes
+
+        gl.message_raw = {"datetime": "2026-10-18T12:00:00Z"}
+        self.contract.audit_target(tid_large)
+
+        # Verify audit record
+        audit = json.loads(self.contract.get_audit(tid_large, 1))
+        self.assertTrue(audit["truncated"])
+        self.assertLessEqual(audit["score"], 89)
+        self.assertEqual(audit["grade"], "B")
+
+        # Register and audit a small clean contract for comparison
+        url_clean = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/good_contract.py"
+        self.contract.register_target("GoodContract", "fixtures", url_clean)
+        tid_clean = json.loads(self.contract.list_target_ids(0, 1))[0]
+
+        with open("fixtures-local/contracts/good_contract.py", "rb") as f:
+            clean_bytes = f.read()
+        gl.nondet.web.pages[url_clean] = clean_bytes
+
+        gl.message_raw = {"datetime": "2026-10-18T12:10:00Z"}
+        self.contract.audit_target(tid_clean)
+
+        clean_audit = json.loads(self.contract.get_audit(tid_clean, 1))
+        self.assertFalse(clean_audit["truncated"])
+        self.assertGreaterEqual(clean_audit["score"], 90)
+
+        # Verify get_board partitioning
+        board = json.loads(self.contract.get_board(10))
+        self.assertIn("best", board)
+        self.assertIn("partial", board)
+
+        # Full audit appears in best, not in partial
+        best_ids = [t["id"] for t in board["best"]]
+        self.assertIn(tid_clean, best_ids)
+        self.assertNotIn(tid_large, best_ids)
+
+        # Truncated audit appears in partial, not in best
+        partial_ids = [t["id"] for t in board["partial"]]
+        self.assertIn(tid_large, partial_ids)
+        self.assertNotIn(tid_clean, partial_ids)
+        self.assertTrue(board["partial"][0]["partial"])
+
 
 if __name__ == "__main__":
     unittest.main()

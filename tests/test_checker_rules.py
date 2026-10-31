@@ -131,6 +131,22 @@ class TestCheckerRulesTooling(unittest.TestCase):
         self.assertGreater(data["badCount"], 0)
         self.assertEqual(data["goodCount"], 0)
 
+    def test_k8_bad_fails_and_good_passes(self):
+        script = f"""
+        const checker = require('{CHECKER_JS}');
+        const fs = require('fs');
+        const badJson = JSON.parse(fs.readFileSync('{FIXTURES_DIR}/k8_bad_evidence.json', 'utf8'));
+        const goodJson = JSON.parse(fs.readFileSync('{FIXTURES_DIR}/k8_good_evidence.json', 'utf8'));
+        const badErrors = checker.checkK8_TruncationIntegrity(badJson);
+        const goodErrors = checker.checkK8_TruncationIntegrity(goodJson);
+        console.log(JSON.stringify({{ badCount: badErrors.length, goodCount: goodErrors.length }}));
+        """
+        res = run_node_eval(script)
+        self.assertEqual(res["code"], 0, res["stderr"])
+        data = res["json"]
+        self.assertGreater(data["badCount"], 0)
+        self.assertEqual(data["goodCount"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

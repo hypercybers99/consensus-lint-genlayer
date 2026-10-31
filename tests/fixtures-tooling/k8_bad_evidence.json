@@ -1,0 +1,25 @@
+{
+  "targets": {
+    "shell_like": {
+      "tid": 4,
+      "label": "ShellLike Large Fixture",
+      "auditRecord": {
+        "truncated": true,
+        "score": 95,
+        "grade": "B"
+      }
+    }
+  },
+  "ecosystem_views": {
+    "board": {
+      "best": [
+        {
+          "id": 4,
+          "label": "ShellLike Large Fixture",
+          "score": 95
+        }
+      ],
+      "partial": []
+    }
+  }
+}

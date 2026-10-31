@@ -119,9 +119,13 @@ class HygieneBadges(gl.Contract):
 
         latest_score = int(summary.get("latest_score", -1))
         latest_grade = str(summary.get("latest_grade", "N/A"))
+        truncated = bool(summary.get("truncated", False))
 
         if latest_score < 0 or latest_grade in ["N/A", ""]:
             raise gl.vm.UserError("target has no scored audit")
+
+        if truncated:
+            raise gl.vm.UserError("cannot claim badge for truncated audit")
 
         now_ts, now_iso = _get_chain_time()
         nonce = int(self.meta.get("nonce", "0")) + 1

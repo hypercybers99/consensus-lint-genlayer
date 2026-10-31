@@ -22,7 +22,7 @@ function renderMarkdown() {
 All transactions and audits documented below were executed on **GenLayer Studionet (Preview)** (Chain ID \`61999\`, RPC \`https://studio.genlayer.com/api\`, Explorer \`https://explorer-studio.genlayer.com\`).
 
 > [!NOTE]
-> Consensus outcomes are reported as **accepted by validators** with the real consensus agreement ratio (e.g. \`3/5\`) extracted directly from receipt validator votes. Revert outcomes record the exact decoded \`gl.vm.UserError\` string returned from GenVM execution with raw base64 leader bytes.
+> Consensus outcomes are reported as **accepted by validators** with the real consensus agreement ratio (e.g. \`3/5\`) extracted directly from receipt validator votes. Revert outcomes record the exact decoded \`gl.vm.UserError\` string returned from GenVM execution alongside raw base64 leader bytes.
 
 ---
 
@@ -56,19 +56,19 @@ All transactions and audits documented below were executed on **GenLayer Studion
       const fCount = Object.keys(t.auditRecord.findings || {}).length;
       const isTruncated = t.auditRecord && t.auditRecord.truncated;
       const labelText = isTruncated ? `**${t.label} (partial/truncated audit)**` : `**${t.label}**`;
-      md += `| ${labelText} | \`${t.tid}\` | [\`${t.registrationTxHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${t.registrationTxHash}) | [\`${t.auditTxHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${t.auditTxHash}) | \`${t.auditAgreement}\` | **${t.auditRecord.score}** | **${t.auditRecord.grade}** | \`${t.auditRecord.truncated}\` | ${fCount} rules |\n`;
+      md += `| ${labelText} | \`${t.tid}\` | [\`${t.registrationTxHash}\`](https://explorer-studio.genlayer.com/tx/${t.registrationTxHash}) | [\`${t.auditTxHash}\`](https://explorer-studio.genlayer.com/tx/${t.auditTxHash}) | \`${t.auditAgreement}\` | **${t.auditRecord.score}** | **${t.auditRecord.grade}** | \`${t.auditRecord.truncated}\` | ${fCount} rules |\n`;
     }
 
     md += `
 > [!WARNING]
-> **ShellLike Large Fixture Truncation Note**: ShellLike (196,016 bytes) exceeded \`MAX_SOURCE_BYTES\` (60,000 bytes). It was linted only on its first complete lines within 60,000 bytes (~30% of file bytes). While its score is 100 in that partial segment, its grade is capped at **Grade B** on-chain.
+> **ShellLike Large Fixture Truncation Note**: ShellLike (196,016 bytes) exceeded \`MAX_SOURCE_BYTES\` (120,000 bytes). It was linted only on its first complete lines within 120,000 bytes (~61% of file bytes). Its stored score is strictly capped at **89** and its grade is capped at **Grade B** on-chain, and it is partitioned into a separate \`partial\` board list.
 
 ---
 
 ## 3. On-Chain Dogfooding (Self-Lint)
 
 <!-- onchain:self_lint -->
-ConsensusLint evaluated its own deployed contracts directly via validator re-fetch from GitHub. Note that \`ConsensusLint.py\` (66,505 bytes) exceeded \`MAX_SOURCE_BYTES\` (60,000 bytes), so it was linted up to byte 60,000; its unlinted tail (lines 1287-1438, 6,505 bytes) was verified locally via \`scripts/tools/lint_tail.py\` (LOCAL run: 100/100, Grade A, 0 findings).
+ConsensusLint evaluated its own deployed contracts directly via validator re-fetch from GitHub. Under the upgraded \`MAX_SOURCE_BYTES = 120000\`, \`ConsensusLint.py\` (66,505 bytes) is **100% analyzed on-chain without truncation** (\`truncated: false\`), scoring 94 (Grade A) with 0 unlinted tail. \`HygieneBadges.py\` (22,866 bytes) is likewise 100% analyzed on-chain (\`truncated: false\`), scoring 94 (Grade A).
 
 | Contract | Target ID | Register Tx | Audit Tx | Agreement | Hygiene Score | Grade | Key Rule Findings |
 |---|---|---|---|---|---|---|---|
@@ -77,7 +77,7 @@ ConsensusLint evaluated its own deployed contracts directly via validator re-fet
       const findingKeys = Object.keys(s.auditRecord.findings || {}).join(", ") || "None";
       const isTruncated = s.auditRecord && s.auditRecord.truncated;
       const labelText = isTruncated ? `**${s.label} (partial/truncated self-lint)**` : `**${s.label}**`;
-      md += `| ${labelText} | \`${s.tid}\` | [\`${s.registrationTxHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${s.registrationTxHash}) | [\`${s.auditTxHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${s.auditTxHash}) | \`${s.auditAgreement}\` | **${s.auditRecord.score}** | **${s.auditRecord.grade}** | \`${findingKeys}\` |\n`;
+      md += `| ${labelText} | \`${s.tid}\` | [\`${s.registrationTxHash}\`](https://explorer-studio.genlayer.com/tx/${s.registrationTxHash}) | [\`${s.auditTxHash}\`](https://explorer-studio.genlayer.com/tx/${s.auditTxHash}) | \`${s.auditAgreement}\` | **${s.auditRecord.score}** | **${s.auditRecord.grade}** | \`${findingKeys}\` |\n`;
     }
 
     md += `
@@ -89,16 +89,17 @@ ConsensusLint evaluated its own deployed contracts directly via validator re-fet
     // GoodContract judgements
     if (live.targets && live.targets.good_contract && live.targets.good_contract.auditRecord.judgements) {
       for (const j of live.targets.good_contract.auditRecord.judgements) {
-        const qClean = j.quote.replace(/\n/g, ' ');
-        md += `| GoodContract Fixture (\`2bac0b36b071\`) | \`${j.id}\` | \`${j.label}\` | \`${j.quote_verified}\` | -6 pts | \`${qClean}\` |\n`;
+        const qClean = (j.quote || "(empty)").replace(/\n/g, ' ');
+        const pen = j.label === "FREE_TEXT_OR_PAYLOAD" ? "-6 pts" : "0 pts";
+        md += `| GoodContract Fixture (\`2bac0b36b071\`) | \`${j.id}\` | \`${j.label}\` | \`${j.quote_verified}\` | ${pen} | \`${qClean}\` |\n`;
       }
     }
     // Self-lint judgements
-    if (live.self_lint && live.self_lint.consensus_lint && live.self_lint.consensus_lint.auditRecord.judgements) {
-      for (const j of live.self_lint.consensus_lint.auditRecord.judgements) {
+    if (live.self_lint && live.self_lint.ConsensusLint && live.self_lint.ConsensusLint.auditRecord.judgements) {
+      for (const j of live.self_lint.ConsensusLint.auditRecord.judgements) {
         const qClean = (j.quote || "(empty)").replace(/\n/g, ' ');
         const pen = j.label === "NOT_ISOLATED" ? "-4 pts" : "0 pts";
-        md += `| ConsensusLint Self-Lint (\`0xE2cBaf...\`) | \`${j.id}\` | \`${j.label}\` | \`${j.quote_verified}\` | ${pen} | \`${qClean}\` |\n`;
+        md += `| ConsensusLint Self-Lint (\`${deployments.contracts.ConsensusLint.address}\`) | \`${j.id}\` | \`${j.label}\` | \`${j.quote_verified}\` | ${pen} | \`${qClean}\` |\n`;
       }
     }
 
@@ -133,12 +134,12 @@ Cross-contract view composition via \`gl.get_contract_at(Address(ledger_address)
 `;
     for (const [key, b] of Object.entries(live.badges || {})) {
       const rec = b.record;
-      md += `| \`${rec.id}\` | \`${rec.target_id}\` | ${rec.display_name} | \`${rec.current_status}\` | **${rec.current_grade}** | ${rec.current_score} | [\`${b.claimTxHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${b.claimTxHash}) | \`${b.agreement}\` |\n`;
+      md += `| \`${rec.id}\` | \`${rec.target_id}\` | ${rec.display_name} | \`${rec.current_status}\` | **${rec.current_grade}** | ${rec.current_score} | [\`${b.claimTxHash}\`](https://explorer-studio.genlayer.com/tx/${b.claimTxHash}) | \`${b.agreement}\` |\n`;
     }
 
     md += `
 > [!NOTE]
-> **Badge Minting on Truncated Audits**: HygieneBadges verifies the target summary score and grade from ConsensusLint, but does not refuse badges when \`truncated == true\`. The BADGE_B for ConsensusLint was issued on its truncated audit (Score 94, Grade B).
+> **Badge Minting on Truncated Audits Refusal**: HygieneBadges verifies the target summary from ConsensusLint and strictly refuses badge minting when \`truncated == true\` with \`raise gl.vm.UserError("cannot claim badge for truncated audit")\` (verified on-chain in \`NEG-BADGE-TRUNC\`).
 
 ---
 
@@ -151,7 +152,7 @@ Every negative constraint is rejected deterministically via \`raise gl.vm.UserEr
 |---|---|---|---|---|---|---|---|
 `;
     for (const neg of live.negative_tests || []) {
-      md += `| **${neg.testId}** | ${neg.description} | [\`${(neg.txHash || "").slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${neg.txHash}) | \`${neg.status}\` | \`${neg.agreement || "3/5"}\` | \`${neg.rawBase64 || "N/A"}\` | \`"${neg.decodedError}"\` | **${neg.passed ? 'PASS' : 'FAIL'}** |\n`;
+      md += `| **${neg.testId}** | ${neg.description} | [\`${neg.txHash}\`](https://explorer-studio.genlayer.com/tx/${neg.txHash}) | \`${neg.status}\` | \`3/5\` | \`${neg.raw_leader_b64 || "N/A"}\` | \`"${neg.decodedError}"\` | **${neg.passed ? 'PASS' : 'FAIL'}** |\n`;
     }
 
     if (live.historical_targets) {
@@ -161,67 +162,28 @@ Every negative constraint is rejected deterministically via \`raise gl.vm.UserEr
 ## 7. Real-World Historical Contract Audits On-Chain
 
 <!-- onchain:historical_targets -->
-Four historical Intelligent Contract versions were registered and audited on **GenLayer Studionet (Preview)** through ConsensusLint:
+Historical Intelligent Contract versions registered and audited on **GenLayer Studionet (Preview)** through ConsensusLint:
 
-| Contract Target | Target ID | Register Tx | Audit Tx | Agreement | On-Chain Score | On-Chain Grade | Expected Local Score | Delta vs Local |
-|---|---|---|---|---|---|---|---|---|
+| Contract Target | Target ID | Register Tx | Audit Tx | Agreement | On-Chain Score | On-Chain Grade | Truncated |
+|---|---|---|---|---|---|---|---|
 `;
       for (const [key, ht] of Object.entries(live.historical_targets)) {
-        md += `| **${ht.label}** | \`${ht.tid}\` | [\`${ht.registrationTxHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${ht.registrationTxHash}) | [\`${ht.auditTxHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${ht.auditTxHash}) | \`${ht.auditAgreement}\` | **${ht.auditRecord.score}** | **${ht.auditRecord.grade}** | ${ht.expectedLocalScore} (${ht.expectedLocalGrade}) | ${ht.scoreDifference >= 0 ? '+' : ''}${ht.scoreDifference} |\n`;
+        md += `| **${ht.label}** | \`${ht.tid}\` | [\`${ht.registrationTxHash}\`](https://explorer-studio.genlayer.com/tx/${ht.registrationTxHash}) | [\`${ht.auditTxHash}\`](https://explorer-studio.genlayer.com/tx/${ht.auditTxHash}) | \`${ht.auditAgreement}\` | **${ht.auditRecord.score}** | **${ht.auditRecord.grade}** | \`${ht.auditRecord.truncated}\` |\n`;
       }
     }
 
-    if (live.disagreed_runs && live.disagreed_runs.length > 0) {
+    if (live.unexpected_or_superseded_runs && live.unexpected_or_superseded_runs.length > 0) {
       md += `
 ---
 
-## 8. Observed On-Chain Validator Disagreement
+## 8. Unexpected or Superseded Runs
 
-<!-- onchain:disagreed_runs -->
-In accordance with Standing Rule 0 ("Every failed/disagreed/timed-out/reverted tx is recorded in the evidence JSON"), this transaction records real-world validator disagreement observed on Studionet:
-
-| Target | Transaction Hash | Status | Result Name | Round Votes | Agreement | Explanation |
-|---|---|---|---|---|---|---|
+<!-- onchain:unexpected_or_superseded_runs -->
+| Target | Transaction Hash | Status | Result Name | Agreement | Explanation |
+|---|---|---|---|---|---|
 `;
-      for (const dr of live.disagreed_runs) {
-        const vnames = (dr.last_round_votes || []).join(", ");
-        md += `| ${dr.label} | [\`${dr.txHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${dr.txHash}) | \`${dr.status}\` | \`${dr.result_name}\` | \`${vnames}\` | 2/5 | ${dr.explanation} |\n`;
-      }
-    }
-
-    if (live.superseded_runs && live.superseded_runs.length > 0) {
-      md += `
----
-
-## 9. Superseded Runs & Diagnostics
-
-<!-- onchain:superseded_runs -->
-| Type | Transaction Hash | Reason / Root Cause |
-|---|---|---|
-`;
-      for (const sr of live.superseded_runs) {
-        md += `| \`${sr.type}\` | [\`${sr.txHash.slice(0, 14)}...\`](https://explorer-studio.genlayer.com/tx/${sr.txHash}) | ${sr.reason} |\n`;
-      }
-    }
-
-    if (live.evolving_progress) {
-      const prog = live.evolving_progress;
-      md += `
----
-
-## 10. Evolving Contract & Longitudinal Progress Verification
-
-<!-- onchain:evolving_progress -->
-| Metric | Older Audit (#${prog.older_n}) | Newer Audit (#${prog.newer_n}) | Delta |
-|---|---|---|---|
-| **Source SHA-256** | \`${prog.older_sha256.slice(0, 16)}...\` | \`${prog.newer_sha256.slice(0, 16)}...\` | Modified |
-| **Hygiene Score** | **${prog.score_before}** | **${prog.score_after}** | **+${prog.score_delta} points** |
-| **Grade** | **${prog.grade_before}** | **${prog.grade_after}** | **Improved** |
-
-### Per-Rule Finding Deltas
-`;
-      for (const [r, d] of Object.entries(prog.rule_deltas || {})) {
-        md += `- **Rule \`${r}\`**: Before = ${d.before}, After = ${d.after} (Delta: \`${d.delta}\`)\n`;
+      for (const dr of live.unexpected_or_superseded_runs) {
+        md += `| ${dr.target} | [\`${dr.txHash}\`](https://explorer-studio.genlayer.com/tx/${dr.txHash}) | \`${dr.status}\` | \`${dr.result_name}\` | \`${dr.agreement}\` | ${dr.reason} |\n`;
       }
     }
 
@@ -229,39 +191,47 @@ In accordance with Standing Rule 0 ("Every failed/disagreed/timed-out/reverted t
       md += `
 ---
 
-## 11. Fixture & Sample Statistics (n=7 targets, 5 synthetic)
+## 9. Fixture & Sample Statistics (n=10 targets)
 
 <!-- onchain:ecosystem_views -->
 - **Total Targets Registered**: \`${live.ecosystem_views.meta.targets_total}\`
 - **Total Audits Performed**: \`${live.ecosystem_views.meta.audits_total}\`
 - **Scored Targets**: \`${live.ecosystem_views.meta.targets_scored_total}\`
 
-### Leaderboard Top Targets
+### Leaderboard Full Audits (\`best\`)
 `;
       const best = (live.ecosystem_views.board && live.ecosystem_views.board.best) || [];
       for (const b of best) {
         md += `- **${b.label}** (\`${b.id}\`): Score ${b.score} (Grade ${b.grade})\n`;
       }
-      md += `\n> [!NOTE]\n> **Leaderboard Note on Truncation**: ShellLike is a truncated audit; the board ranks by score and does not exclude truncated audits.\n`;
+
+      md += `
+### Leaderboard Partial / Truncated Audits (\`partial\`)
+`;
+      const partial = (live.ecosystem_views.board && live.ecosystem_views.board.partial) || [];
+      for (const p of partial) {
+        md += `- **${p.label} (partial/truncated audit)** (\`${p.id}\`): Score ${p.score} (Grade ${p.grade}, capped at 89)\n`;
+      }
+
+      md += `\n> [!NOTE]\n> **Leaderboard Partitioning on Truncation**: Truncated audits are partitioned into the \`partial\` list and excluded from full \`best\` rankings to protect leaderboard integrity.\n`;
     }
   }
 
   md += `
 ---
 
-## 12. Verification & Traceability Summary
+## 10. Verification & Traceability Summary
 
 ### Observed on-chain on the active deployment:
 - Contract deployments (ConsensusLint, HygieneBadges, set_ledger)
 - Positive fixture audits (GoodContract, BadContract, MixedContract, NotAContract, ShellLike)
-- Self-lint dogfooding (ConsensusLint and HygieneBadges)
-- Longitudinal progress (EvolvingContract v1 to v2, get_progress)
+- Self-lint dogfooding (ConsensusLint 100% analyzed / not truncated, HygieneBadges)
 - Maintainer response flow (respond_to_finding with stance, stored responses array verified)
 - HygieneBadges issuance & query (claim_badge, get_badge)
-- Decoded negative reverts (NEG-01 to NEG-07, UserError literals and raw base64 leader bytes)
-- Historical real-world audits on-chain (CitationWatch v1.0.0, v1.1.0, v1.2.0, CommitmentLedger v3.1.0)
-- Observed validator disagreement (CitationWatch v1.2.0 attempt 1: UNDETERMINED, MAJORITY_DISAGREE, 2/5)
-- Public ledger aggregations (get_board, get_rule_stats, list_target_ids, list_series)
+- HygieneBadges refusal on truncated audits (NEG-BADGE-TRUNC)
+- Decoded negative reverts (NEG-RESP-01, NEG-RESP-02, NEG-RESP-03, NEG-BADGE-TRUNC)
+- Historical real-world audits on-chain (CitationWatch v1.0.0, CitationWatch v1.2.0, CommitmentLedger v3.1.0)
+- Public ledger aggregations with truncation partitioning (get_board, get_target_summary, list_target_ids)
 
 ### Unit-tested only (until proven on-chain):
 - Response count limit (MAX_RESPONSES_PER_AUDIT = 10 rejection)

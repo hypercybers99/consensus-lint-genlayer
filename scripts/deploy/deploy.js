@@ -1,3 +1,5 @@
+const dns = require('dns');
+dns.setDefaultResultOrder('verbatim');
 const { createClient, chains, createAccount } = require('genlayer-js');
 const { generatePrivateKey } = require('viem/accounts');
 const fs = require('fs');
@@ -153,6 +155,36 @@ async function main() {
     throw new Error(`Owner address mismatch: expected ${account.address.toLowerCase()}, got ${badgesOwner.toLowerCase()}`);
   }
 
+  // Verify SHA-256 on-chain via eth_getTransactionByHash contract_code base64 decode
+  console.log("\nVerifying on-chain contract code SHA-256 matches disk source...");
+  async function verifyOnchainSha256(txHash, expectedSha, name) {
+    const res = await fetch(RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_getTransactionByHash',
+        params: [txHash],
+      }),
+    });
+    const json = await res.json();
+    const codeB64 = json.result?.data?.contract_code;
+    if (!codeB64) {
+      throw new Error(`Failed to retrieve contract_code for ${name} from tx ${txHash}`);
+    }
+    const code = Buffer.from(codeB64, 'base64').toString('utf8');
+    const actualSha = crypto.createHash('sha256').update(code, 'utf8').digest('hex');
+    if (actualSha !== expectedSha) {
+      throw new Error(`SHA256 mismatch for ${name}: expected ${expectedSha}, got ${actualSha}`);
+    }
+    console.log(`[PASS] ${name} on-chain source SHA-256 verified: ${actualSha}`);
+    return actualSha;
+  }
+
+  await verifyOnchainSha256(lintDeployTxHash, consensusLintSha256, "ConsensusLint");
+  await verifyOnchainSha256(badgesDeployTxHash, hygieneBadgesSha256, "HygieneBadges");
+
   const deployments = {
     network: "GenLayer Studionet (Preview)",
     chainId: 61999,
@@ -186,7 +218,32 @@ async function main() {
         status: "superseded diagnostic probe",
         role: "Phase 0 runtime probe contract",
       }
-    }
+    },
+    superseded: [
+      {
+        name: "ConsensusLint (v1.0.0)",
+        address: "0xE2cBaf1916Df7C742486B2eC4E5d3A3289115F2D",
+        deployTxHash: "0x0f93a3a8679b5ed4e3e7c7acbf848b219834481a91a636e2006d0e3955c1faed",
+        sourceSha256: "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b",
+        status: "superseded by v1.0.1",
+        agreement: "3/5"
+      },
+      {
+        name: "HygieneBadges (v1.0.0)",
+        address: "0x3CA9E1b7804b442eaA932ae190d494D4A59295bF",
+        deployTxHash: "0xeef694c69810f8b4f0c16667bffc0b5784d4302617e2136fd7fadf993fd6c609",
+        sourceSha256: "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8",
+        status: "superseded by v1.0.1",
+        agreement: "3/5"
+      },
+      {
+        name: "Probe",
+        address: "0xCAF2c7cdBD0a6EB4154b763c9fA869407CcCb7b6",
+        deployTxHash: "0xf00fa3b5d292ddf1e77aee476a82d8993a41f75f8cd2205cd0955b5e315a76f8",
+        status: "superseded diagnostic probe",
+        role: "Phase 0 runtime probe contract"
+      }
+    ]
   };
 
   const deploymentsPath = path.join(__dirname, 'deployments.json');

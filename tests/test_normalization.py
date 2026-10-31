@@ -27,7 +27,7 @@ class TestNormalization(unittest.TestCase):
         self.assertEqual(str(ctx.exception), "source is not valid utf-8")
 
     def test_truncation_behavior(self):
-        large_source = b"# v0.2.16\n" + (b"def foo():\n    pass\n" * 4000)
+        large_source = b"# v0.2.16\n" + (b"def foo():\n    pass\n" * 7000)
         self.assertGreater(len(large_source), MAX_SOURCE_BYTES)
         norm, trunc, sha, rlen = normalize_source_text(large_source)
         self.assertTrue(trunc)

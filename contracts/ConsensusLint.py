@@ -21,7 +21,7 @@ RESPONSE_NOTE_MAX = 280
 MAX_RESPONSES_PER_AUDIT = 10
 SNIPPET_MAX = 160
 MAX_FINDINGS_STORED_PER_RULE = 5
-MAX_SOURCE_BYTES = 60000
+MAX_SOURCE_BYTES = 120000
 MAX_FUNCTION_EXCERPT_LINES = 80
 MODEL_PENALTY_CAP = 20
 PAGE_LIMIT_MAX = 50
@@ -751,6 +751,7 @@ def _build_model_prompt(call_sites: list) -> str:
         "  Labels: RECOMPUTES / COMPARES_ONLY / UNCLEAR",
         "- J2: What does the acceptance test compare?",
         "  Labels: ENUM_OR_BUCKET / FREE_TEXT_OR_PAYLOAD / UNCLEAR",
+        "  Note: Comparing a computed hash or digest (such as hashlib.sha256(...).hexdigest()) to an expected hash is deterministic and MUST be labeled ENUM_OR_BUCKET, NOT FREE_TEXT_OR_PAYLOAD.",
         "For Prompt Excerpts (kind: EXEC_PROMPT):",
         "- J3: Is untrusted input isolated from instructions (delimiters AND statement that content is data)?",
         "  Labels: ISOLATED / PARTIAL / NOT_ISOLATED / UNCLEAR",
@@ -864,6 +865,9 @@ def _compute_score_and_penalty(findings: dict, judgements: list, truncated: bool
         deductions += w * min(cnt, c)
 
     score = max(0, 100 - deductions - capped_penalty)
+    if truncated:
+        score = min(89, score)
+
     if score >= 90: grade = "A"
     elif score >= 80: grade = "B"
     elif score >= 65: grade = "C"
@@ -1039,6 +1043,8 @@ class ConsensusLint(gl.Contract):
                 "status": "OK",
                 "source_sha256": sha256_hash,
                 "mode": mode,
+                "truncated": truncated,
+                "score": score,
                 "rule_counts": counts,
                 "penalty_bucket": pen_bucket,
                 "audit": audit_payload,
@@ -1098,7 +1104,17 @@ class ConsensusLint(gl.Contract):
                 except Exception:
                     return False
 
-            _, _, _, val_bucket = _compute_score_and_penalty(val_findings, val_judgements, truncated)
+            if val_mode == "CONTRACT":
+                val_score, _, _, val_bucket = _compute_score_and_penalty(val_findings, val_judgements, truncated)
+            else:
+                val_score = -1
+                val_bucket = "0"
+            if truncated != bool(lead_data.get("truncated")):
+                return False
+
+            if val_score != lead_data.get("score"):
+                return False
+
             if val_bucket != lead_data.get("penalty_bucket"):
                 return False
 
@@ -1368,19 +1384,41 @@ class ConsensusLint(gl.Contract):
                 all_targets.append(json.loads(self.targets[tid]))
 
         scored = [t for t in all_targets if t["latest_score"] >= 0]
-        best_targets = sorted(scored, key=lambda t: t["latest_score"], reverse=True)[:lim]
+
+        # Partition scored audits into full audits and truncated audits
+        full_scored = []
+        truncated_scored = []
+        for t in scored:
+            lat_n = int(t.get("latest_n", 0))
+            is_trunc = False
+            if lat_n > 0:
+                k = f"{t['id']}:{lat_n}"
+                if k in self.audits:
+                    a_rec = json.loads(self.audits[k])
+                    is_trunc = bool(a_rec.get("truncated", False))
+            if is_trunc:
+                truncated_scored.append(t)
+            else:
+                full_scored.append(t)
+
+        best_targets = sorted(full_scored, key=lambda t: t["latest_score"], reverse=True)[:lim]
         best_list = [{
             "id": t["id"], "label": t["label"], "score": t["latest_score"], "grade": t["latest_grade"]
         } for t in best_targets]
 
-        multi_audit = [t for t in scored if t["first_score"] >= 0 and t["audits_total"] >= 2]
+        partial_targets = sorted(truncated_scored, key=lambda t: t["latest_score"], reverse=True)[:lim]
+        partial_list = [{
+            "id": t["id"], "label": t["label"], "score": t["latest_score"], "grade": t["latest_grade"], "partial": True
+        } for t in partial_targets]
+
+        multi_audit = [t for t in full_scored if t["first_score"] >= 0 and t["audits_total"] >= 2]
         most_improved = sorted(multi_audit, key=lambda t: (t["latest_score"] - t["first_score"]), reverse=True)[:lim]
         improved_list = [{
             "id": t["id"], "label": t["label"], "first_score": t["first_score"],
             "latest_score": t["latest_score"], "delta": t["latest_score"] - t["first_score"]
         } for t in most_improved]
 
-        return json.dumps({"best": best_list, "most_improved": improved_list}, sort_keys=True)
+        return json.dumps({"best": best_list, "partial": partial_list, "most_improved": improved_list}, sort_keys=True)
 
     @gl.public.view
     def get_rule_stats(self) -> str:

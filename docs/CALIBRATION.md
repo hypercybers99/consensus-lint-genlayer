@@ -78,13 +78,15 @@ Evaluates historical commits from prior Intelligent Contract repositories. Rows 
 ## (f) Bounded Model Layer Judgement Stability & On-Chain Observations
 
 - **Labelled Code Excerpts**: 15
-- **Standalone LLM Measurement**: `Not measured` (not measured in isolation (GenVM validator LLM model cannot be executed in standalone local script without GenVM sandbox or external API credentials; prompt parser and quote verification are unit-tested in tests/test_model_layer.py))
+- **Standalone LLM Measurement**: `Not measured` (not measured in isolation: GenVM validator LLM model cannot be executed in standalone local script without GenVM sandbox or external API credentials; prompt parser and quote verification are unit-tested in `tests/test_model_layer.py`)
 - **Unit Test Coverage**: Prompt templates, snippet clipping, JSON parser, and verbatim quote verification are unit-tested under `tests/test_model_layer.py` (all tests passing).
 - **Safety Cap**: Model penalty is strictly capped at `20 points` (`MODEL_PENALTY_CAP`). Unverifiable quotes are downgraded to `UNCLEAR` (0 points penalty).
 
-### Model Layer Observed Behaviour On-Chain
+### Model Layer Observed Behaviour On-Chain & v1.0.1 Calibration
 
-| Target | Question | Output Label | Quoted Verbatim Snippet | Quote Verified | Penalty | Assessment |
-|---|---|---|---|---|---|---|
-| GoodContract Fixture (2bac0b36b071) | `J2` | `FREE_TEXT_OR_PAYLOAD` | `return val_sand.calldata == ldata.get("sha256")` | `True` | -6 pts | Model false positive: comparing a deterministic SHA-256 string is a canonical bucket, but the model categorized it as FREE_TEXT_OR_PAYLOAD. |
-| ConsensusLint Self-Lint (0xE2cBaf...) | `J3` | `NOT_ISOLATED` | `def prompt_call(): return gl.nondet.exec_prompt(prompt_text)` | `True` | -4 pts | Model cited the generic gl.nondet.exec_prompt call site rather than the prompt template assembly, resulting in 4 points penalty. |
+| Deployment | Target | Question | Output Label | Quoted Verbatim Snippet | Quote Verified | Penalty | Assessment |
+|---|---|---|---|---|---|---|---|
+| Active (v1.0.1) | GoodContract Fixture (`2bac0b36b071`) | `J2` | `ENUM_OR_BUCKET` | *(none - bucket match)* | `False` | 0 pts | **Calibrated & Verified**: With the J2 prompt clarification on deterministic SHA-256 comparison, validators classified it as ENUM_OR_BUCKET. GoodContract achieved Score 100 on-chain. |
+| Active (v1.0.1) | ConsensusLint Self-Lint (`0xDd9c4b...`) | `J3` | `UNCLEAR` | *(none)* | `False` | 0 pts | Fallback downgrade on generic prompt runner; 0 penalty. Self-lint scored 94 (Grade A). |
+| Superseded (v1.0.0) | GoodContract Fixture | `J2` | `FREE_TEXT_OR_PAYLOAD` | `return val_sand.calldata == ldata.get("sha256")` | `True` | -6 pts | False positive on SHA-256 digest comparison in v1.0.0; resolved by v1.0.1 prompt calibration. |
+| Superseded (v1.0.0) | ConsensusLint Self-Lint | `J3` | `NOT_ISOLATED` | `def prompt_call(): return gl.nondet.exec_prompt(...)` | `True` | -4 pts | Model cited call site rather than prompt assembly in v1.0.0. |

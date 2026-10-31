@@ -252,6 +252,60 @@ function checkK7_RenderedTablesByteIdentical(docPath, renderScriptPath) {
   return errors;
 }
 
+// K8: Truncated audits score <= 89, partial label, and no truncated audit in full ranking
+function checkK8_TruncationIntegrity(liveEvidence, docPath) {
+  const errors = [];
+
+  // Check liveEvidence JSON targets
+  for (const [key, t] of Object.entries(liveEvidence.targets || {})) {
+    if (t.auditRecord && t.auditRecord.truncated) {
+      if (t.auditRecord.score > 89) {
+        errors.push(`[K8 FAIL] Target '${t.label}' is truncated but score is ${t.auditRecord.score} (> 89)`);
+      }
+    }
+  }
+
+  // Check self_lint
+  for (const [key, s] of Object.entries(liveEvidence.self_lint || {})) {
+    if (s.auditRecord && s.auditRecord.truncated) {
+      if (s.auditRecord.score > 89) {
+        errors.push(`[K8 FAIL] Self-lint '${s.label}' is truncated but score is ${s.auditRecord.score} (> 89)`);
+      }
+    }
+  }
+
+  // Check board rankings if present in ecosystem_views
+  if (liveEvidence.ecosystem_views && liveEvidence.ecosystem_views.board) {
+    const best = liveEvidence.ecosystem_views.board.best || [];
+    for (const item of best) {
+      // Find matching target in liveEvidence
+      const matchingTarget = Object.values(liveEvidence.targets || {}).find(t => t.tid === item.id || t.label === item.label);
+      if (matchingTarget && matchingTarget.auditRecord && matchingTarget.auditRecord.truncated) {
+        errors.push(`[K8 FAIL] Truncated target '${item.label}' found in full 'best' board ranking`);
+      }
+    }
+  }
+
+  // Check document text if docPath provided
+  if (docPath && fs.existsSync(docPath)) {
+    const docText = fs.readFileSync(docPath, 'utf8');
+    for (const [key, t] of Object.entries(liveEvidence.targets || {})) {
+      if (t.auditRecord && t.auditRecord.truncated) {
+        const label = t.label;
+        const idx = docText.indexOf(label);
+        if (idx !== -1) {
+          const snippet = docText.slice(Math.max(0, idx - 50), Math.min(docText.length, idx + 200));
+          if (!snippet.toLowerCase().includes('partial') && !snippet.toLowerCase().includes('truncated')) {
+            errors.push(`[K8 FAIL] Document '${path.basename(docPath)}' mentions truncated target '${label}' without partial/truncated label`);
+          }
+        }
+      }
+    }
+  }
+
+  return errors;
+}
+
 function runFullChecker(options = {}) {
   const rootDir = path.resolve(__dirname, '../..');
   const deployDir = path.join(rootDir, 'scripts/deploy');
@@ -270,7 +324,7 @@ function runFullChecker(options = {}) {
     path.join(rootDir, 'scripts/probes/run_probes.js'),
   ].filter(f => fs.existsSync(f));
 
-  console.log("=== RUNNING CONSISTENCY CHECKER (K1 - K7) ===");
+  console.log("=== RUNNING CONSISTENCY CHECKER (K1 - K8) ===");
   const allErrors = [];
 
   // Basic deployments check
@@ -361,6 +415,13 @@ function runFullChecker(options = {}) {
   );
   allErrors.push(...k7Errors);
 
+  // K8
+  if (liveEvidence) {
+    console.log("Rule K8: Checking truncation integrity (score <= 89, board separation)...");
+    const k8Errors = checkK8_TruncationIntegrity(liveEvidence, path.join(docsDir, 'EVIDENCE.md'));
+    allErrors.push(...k8Errors);
+  }
+
   if (allErrors.length > 0) {
     console.log("\n--- CHECKER FOUND VIOLATIONS ---");
     for (const err of allErrors) console.error(err);
@@ -370,7 +431,7 @@ function runFullChecker(options = {}) {
     return { success: false, errors: allErrors };
   }
 
-  console.log("\nALL EVIDENCE CONSISTENCY CHECKS (K1 - K7) PASSED OK!");
+  console.log("\nALL EVIDENCE CONSISTENCY CHECKS (K1 - K8) PASSED OK!");
   return { success: true, errors: [] };
 }
 
@@ -391,6 +452,7 @@ module.exports = {
   checkK5_CalibrationCounters,
   checkK6_TruncationLabels,
   checkK7_RenderedTablesByteIdentical,
+  checkK8_TruncationIntegrity,
   extractContractMethods,
   extractUserErrors,
   runFullChecker,

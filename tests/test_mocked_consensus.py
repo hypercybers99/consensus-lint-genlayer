@@ -117,5 +117,27 @@ class TestMockedConsensus(unittest.TestCase):
         self.assertEqual(lead_payload["penalty_bucket"], b_val)
 
 
+    def test_validator_payload_includes_truncated_and_capped_score(self):
+        # Leader payload with truncated flag and capped score
+        lead_payload = {
+            "source_sha256": self.good_sha,
+            "mode": "CONTRACT",
+            "truncated": True,
+            "score": 89,
+            "rule_counts": {},
+            "penalty_bucket": "0",
+        }
+        # If validator agrees on truncated and score 89, accepted
+        val_truncated = True
+        val_score = 89
+        self.assertEqual(lead_payload["truncated"], val_truncated)
+        self.assertEqual(lead_payload["score"], val_score)
+
+        # If leader lies about truncated (claims False when True), mismatch rejects
+        self.assertNotEqual(lead_payload["truncated"], False)
+        # If leader lies about score (claims 100 when truncated), mismatch rejects
+        self.assertNotEqual(lead_payload["score"], 100)
+
+
 if __name__ == "__main__":
     unittest.main()

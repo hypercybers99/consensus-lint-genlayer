@@ -95,29 +95,31 @@ For judgement questions (e.g. verifying whether a prompt includes unvalidated pu
 
 | Parameter | Value | Justification |
 |---|---|---|
-| `MAX_SOURCE_BYTES` | 60,000 bytes (60 KB) | Probed on Studionet; accommodates production contracts. Sources > 60 KB are truncated to limit and capped at grade B. |
+| `MAX_SOURCE_BYTES` | 120,000 bytes (120 KB) | Probed and benchmarked on Studionet; accommodates production contracts up to 120 KB. Sources > 120 KB are truncated to limit, score is capped at 89, and grade is capped at Grade B. |
 | `MAX_FUNCTION_EXCERPT_LINES` | 80 lines | Prevents model prompt token overflows. |
 | `AUDIT_COOLDOWN_SECONDS` | 300 seconds (5 min) | Prevents denial-of-service spam on validator web-fetch bandwidth. |
 | `MAX_AUDITS_PER_TARGET` | 10 audits | Bounded storage growth per registered target. |
 | `PAGE_LIMIT_MAX` | 50 items | All public views strictly enforce pagination limits. |
 
-### Source Truncation Mechanics & Deployed Behaviour
-In `contracts/ConsensusLint.py`, when a contract's source size exceeds `MAX_SOURCE_BYTES` (60,000 bytes):
-1. The text is clipped to the last complete line within the first 60,000 bytes via `_clip_to_complete_lines(raw_source, MAX_SOURCE_BYTES)`.
+### Source Truncation Mechanics & Deployed Behaviour (v1.0.1)
+In `contracts/ConsensusLint.py`, when a contract's source size exceeds `MAX_SOURCE_BYTES` (120,000 bytes):
+1. The text is clipped to the last complete line within the first 120,000 bytes via `_clip_to_complete_lines(raw_source, MAX_SOURCE_BYTES)`.
 2. The recorded `source_sha256` is the SHA-256 digest of the *truncated* text, not the complete original file.
-3. Scoring and grade capping logic in `_compute_score_and_penalty` (lines 871-874):
+3. Scoring and grade capping logic in `_compute_score_and_penalty`:
 ```python
 if score >= 90: grade = "A"
 elif score >= 80: grade = "B"
 ...
-if truncated and grade == "A":
-    grade = "B"
+if truncated:
+    if score > 89:
+        score = 89
+    if grade == "A":
+        grade = "B"
 ```
-Notice that:
-- The **grade** is capped at **Grade B** (cannot earn Grade A).
-- The **score** is **NOT** capped; a clean file with 0 findings in its truncated head retains a numerical score of **100**.
-- **Leaderboard Impact**: `ConsensusLint.get_board("best")` sorts targets by `(score, last_audit_ts)` without checking `truncated == true`. A truncated file scoring 100 ranks at the top of the board (e.g. `ShellLike Large Fixture`).
-- **HygieneBadges Impact**: `HygieneBadges.claim_badge` calls `get_target_summary` to inspect score and grade, but does not check the `truncated` flag, allowing badges to be minted on truncated audits (e.g. `ConsensusLint` self-lint).
+Under v1.0.1:
+- The **score** is strictly capped at **89**, matching the grade capping at **Grade B**.
+- **Leaderboard Partitioning**: `ConsensusLint.get_board("best")` partitions truncated audits into a separate `partial` array (`{"best": [...], "partial": [...], "most_improved": [...]}`). Truncated audits (e.g. `ShellLike Large Fixture`) appear only in `partial`, preserving full audit rankings.
+- **Badge Minting Integrity**: `HygieneBadges.claim_badge` inspects `summary.get("truncated", False)` and strictly rejects truncated audits with `raise gl.vm.UserError("cannot claim badge for truncated audit")` (verified on-chain in `NEG-BADGE-TRUNC`).
 
 ---
 

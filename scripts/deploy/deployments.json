@@ -3,27 +3,27 @@
   "chainId": 61999,
   "rpc": "https://studio.genlayer.com/api",
   "deployer": "0xe2d9062adc5f4b6061788996f859b224a7a8745c",
-  "deployedAt": "2026-10-18T08:06:39.366Z",
+  "deployedAt": "2026-10-31T09:27:19.215Z",
   "contracts": {
     "ConsensusLint": {
-      "address": "0xE2cBaf1916Df7C742486B2eC4E5d3A3289115F2D",
-      "deployTxHash": "0x0f93a3a8679b5ed4e3e7c7acbf848b219834481a91a636e2006d0e3955c1faed",
-      "sourceSha256": "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b",
+      "address": "0xDd9c4b5d187664780142f24E4327D48Db59363D7",
+      "deployTxHash": "0xb7cfcbc25af965a64af33f265419c7d0929335b1440c17c8e327d4eb6911d33b",
+      "sourceSha256": "ce592840fda0a61d2f3d0ea39aaaa5ba2c6da0929ee9a6a7654cf7e74c0d3e25",
       "status": "ACCEPTED",
       "agreement": "3/5",
-      "elapsedSeconds": 8.85
+      "elapsedSeconds": 11.35
     },
     "HygieneBadges": {
-      "address": "0x3CA9E1b7804b442eaA932ae190d494D4A59295bF",
-      "deployTxHash": "0xeef694c69810f8b4f0c16667bffc0b5784d4302617e2136fd7fadf993fd6c609",
-      "sourceSha256": "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8",
+      "address": "0xbd8d4F05423Dd98e2A1F911A371911c1671Eb140",
+      "deployTxHash": "0xe44d8d449652afc929de9fbdbc32f8828d1c54b4f611fd3fd6841c05ca975426",
+      "sourceSha256": "6d2a48275d31556f42ac8fed0b0c91ecace9300e3f60592643b5bf98e3009923",
       "status": "ACCEPTED",
-      "agreement": "3/5",
-      "elapsedSeconds": 5.9,
-      "ledgerAddress": "0xe2cbaf1916df7c742486b2ec4e5d3a3289115f2d",
-      "setLedgerTxHash": "0x7c5de5bd4d971573b2d555a0b6bb31b6fbfdad93e82c78521f495a52f249e328",
+      "agreement": "4/5",
+      "elapsedSeconds": 5.47,
+      "ledgerAddress": "0xdd9c4b5d187664780142f24e4327d48db59363d7",
+      "setLedgerTxHash": "0xb5bf92cfd5a4093f490321435693e0637b2f42ad0989fc6c4841ddfd0e781c65",
       "setLedgerAgreement": "3/5",
-      "setLedgerElapsedSeconds": 5.68
+      "setLedgerElapsedSeconds": 8.77
     },
     "Probe": {
       "address": "0xCAF2c7cdBD0a6EB4154b763c9fA869407CcCb7b6",
@@ -31,5 +31,30 @@
       "status": "superseded diagnostic probe",
       "role": "Phase 0 runtime probe contract"
     }
-  }
+  },
+  "superseded": [
+    {
+      "name": "ConsensusLint (v1.0.0)",
+      "address": "0xE2cBaf1916Df7C742486B2eC4E5d3A3289115F2D",
+      "deployTxHash": "0x0f93a3a8679b5ed4e3e7c7acbf848b219834481a91a636e2006d0e3955c1faed",
+      "sourceSha256": "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b",
+      "status": "superseded by v1.0.1",
+      "agreement": "3/5"
+    },
+    {
+      "name": "HygieneBadges (v1.0.0)",
+      "address": "0x3CA9E1b7804b442eaA932ae190d494D4A59295bF",
+      "deployTxHash": "0xeef694c69810f8b4f0c16667bffc0b5784d4302617e2136fd7fadf993fd6c609",
+      "sourceSha256": "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8",
+      "status": "superseded by v1.0.1",
+      "agreement": "3/5"
+    },
+    {
+      "name": "Probe",
+      "address": "0xCAF2c7cdBD0a6EB4154b763c9fA869407CcCb7b6",
+      "deployTxHash": "0xf00fa3b5d292ddf1e77aee476a82d8993a41f75f8cd2205cd0955b5e315a76f8",
+      "status": "superseded diagnostic probe",
+      "role": "Phase 0 runtime probe contract"
+    }
+  ]
 }
