@@ -45,12 +45,21 @@ All transactions and audits documented below were executed on **GenLayer Studion
 ## 3. On-Chain Dogfooding (Self-Lint)
 
 <!-- onchain:self_lint -->
-ConsensusLint evaluated its own deployed contracts directly via validator re-fetch from GitHub. Under the upgraded `MAX_SOURCE_BYTES = 120000`, `ConsensusLint.py` (66,505 bytes) is **100% analyzed on-chain without truncation** (`truncated: false`), scoring 94 (Grade A) with 0 unlinted tail. `HygieneBadges.py` (22,866 bytes) is likewise 100% analyzed on-chain (`truncated: false`), scoring 94 (Grade A).
+ConsensusLint v1.0.1 sources at commit 8b547e3, fetched by validators from a commit-pinned URL (`ConsensusLint.py` at 68,032 bytes and `HygieneBadges.py` at 8,990 bytes), were 100% analyzed on-chain without truncation (`truncated: false`), both scoring 94 (Grade A) with 0 unlinted tail.
 
 | Contract | Target ID | Register Tx | Audit Tx | Agreement | Hygiene Score | Grade | Key Rule Findings |
 |---|---|---|---|---|---|---|---|
-| **ConsensusLint Ledger Contract** | `d694b3d29de5` | [`0x9758f53cf57b962138b9015aa7f5d1b2f1f5eb7a8a9910df62fee1dc74292509`](https://explorer-studio.genlayer.com/tx/0x9758f53cf57b962138b9015aa7f5d1b2f1f5eb7a8a9910df62fee1dc74292509) | [`0xa420f016e573f7dc37bb6d3e1bc2a179b5872890e5086bdbb7850152b2ae6a97`](https://explorer-studio.genlayer.com/tx/0xa420f016e573f7dc37bb6d3e1bc2a179b5872890e5086bdbb7850152b2ae6a97) | `3/5` | **94** | **A** | `CL06, CL16` |
-| **HygieneBadges Contract** | `60285d3dfb85` | [`0x826856831ae04e0384e5a7fafb58dde93e551c5bbd8480454931997e64364863`](https://explorer-studio.genlayer.com/tx/0x826856831ae04e0384e5a7fafb58dde93e551c5bbd8480454931997e64364863) | [`0x5dc8b103f6eeff5783578cf907b9559c5e222fe1a74c88f6784268a5e7073904`](https://explorer-studio.genlayer.com/tx/0x5dc8b103f6eeff5783578cf907b9559c5e222fe1a74c88f6784268a5e7073904) | `3/5` | **94** | **A** | `CL06, CL16` |
+| **ConsensusLint Ledger Contract** | `a5e2814115e4` | [`0x722b5d235239fcf8dc21b82309292c9e920abb8f63784933be5feb897316ff56`](https://explorer-studio.genlayer.com/tx/0x722b5d235239fcf8dc21b82309292c9e920abb8f63784933be5feb897316ff56) | [`0x22cfe32c0ce4c7e621571e04a76943bea4eb6fe4b09ea0c89a65f9570a6c69a5`](https://explorer-studio.genlayer.com/tx/0x22cfe32c0ce4c7e621571e04a76943bea4eb6fe4b09ea0c89a65f9570a6c69a5) | `3/5` | **94** | **A** | `CL06, CL16` |
+| **HygieneBadges Contract** | `ead8d85fa0f0` | [`0xa6f5a99d02a23cd2d9817eb0fd92cd0be694e76bc063af5fb70ec601a09ac916`](https://explorer-studio.genlayer.com/tx/0xa6f5a99d02a23cd2d9817eb0fd92cd0be694e76bc063af5fb70ec601a09ac916) | [`0x8a47d96342ec940756374087d38ab08fb6f9a118709a5e391566151d6b7b98ed`](https://explorer-studio.genlayer.com/tx/0x8a47d96342ec940756374087d38ab08fb6f9a118709a5e391566151d6b7b98ed) | `3/5` | **94** | **A** | `CL06, CL16` |
+
+### Superseded v1.0.0 self-lint (historical)
+<!-- onchain:superseded_self_lint -->
+The initial v1.0.0 self-lint audited the pre-v1.0.1 sources at the `main` branch (66,505 bytes and 8,833 bytes):
+
+| Contract | Target ID | Register Tx | Audit Tx | Agreement | Score | Grade | Notes |
+|---|---|---|---|---|---|---|---|
+| ConsensusLint Ledger Contract | `d694b3d29de5` | [`0x9758f53cf57b962138b9015aa7f5d1b2f1f5eb7a8a9910df62fee1dc74292509`](https://explorer-studio.genlayer.com/tx/0x9758f53cf57b962138b9015aa7f5d1b2f1f5eb7a8a9910df62fee1dc74292509) | [`0xa420f016e573f7dc37bb6d3e1bc2a179b5872890e5086bdbb7850152b2ae6a97`](https://explorer-studio.genlayer.com/tx/0xa420f016e573f7dc37bb6d3e1bc2a179b5872890e5086bdbb7850152b2ae6a97) | `3/5` | **94** | **A** | Superseded v1.0.0 self-lint |
+| HygieneBadges Contract | `60285d3dfb85` | [`0x826856831ae04e0384e5a7fafb58dde93e551c5bbd8480454931997e64364863`](https://explorer-studio.genlayer.com/tx/0x826856831ae04e0384e5a7fafb58dde93e551c5bbd8480454931997e64364863) | [`0x5dc8b103f6eeff5783578cf907b9559c5e222fe1a74c88f6784268a5e7073904`](https://explorer-studio.genlayer.com/tx/0x5dc8b103f6eeff5783578cf907b9559c5e222fe1a74c88f6784268a5e7073904) | `3/5` | **94** | **A** | Superseded v1.0.0 self-lint |
 
 ### Model Layer Judgements (J1 - J3) on Active Contracts
 <!-- onchain:model_judgements -->
@@ -58,8 +67,8 @@ ConsensusLint evaluated its own deployed contracts directly via validator re-fet
 |---|---|---|---|---|---|
 | GoodContract Fixture (`2bac0b36b071`) | `J1` | `RECOMPUTES` | `true` | 0 pts | `def val_fetch():     res = gl.nondet.web.get(source_url)     body = res.body if isinstance(res.body, (bytes, bytearray)) else str(res.body).encode("utf-8")     return hashlib.sha256(body).hexdigest()` |
 | GoodContract Fixture (`2bac0b36b071`) | `J2` | `ENUM_OR_BUCKET` | `true` | 0 pts | `return val_sand.calldata == ldata.get("sha256")` |
-| ConsensusLint Self-Lint (`0xDd9c4b5d187664780142f24E4327D48Db59363D7`) | `J1` | `UNCLEAR` | `false` | 0 pts | `(empty)` |
-| ConsensusLint Self-Lint (`0xDd9c4b5d187664780142f24E4327D48Db59363D7`) | `J2` | `ENUM_OR_BUCKET` | `true` | 0 pts | `if val_bucket != lead_data.get("penalty_bucket"):                 return False` |
+| ConsensusLint Self-Lint (`0xDd9c4b5d187664780142f24E4327D48Db59363D7`) | `J1` | `RECOMPUTES` | `true` | 0 pts | `linter = _LinterEngine(norm_text)             try:                 val_mode, val_findings, val_counts, val_call_sites = linter.run()` |
+| ConsensusLint Self-Lint (`0xDd9c4b5d187664780142f24E4327D48Db59363D7`) | `J2` | `ENUM_OR_BUCKET` | `true` | 0 pts | `if val_score != lead_data.get("score"):                 return False              if val_bucket != lead_data.get("penalty_bucket"):` |
 | ConsensusLint Self-Lint (`0xDd9c4b5d187664780142f24E4327D48Db59363D7`) | `J3` | `UNCLEAR` | `false` | 0 pts | `(empty)` |
 | ConsensusLint Self-Lint (`0xDd9c4b5d187664780142f24E4327D48Db59363D7`) | `J3` | `UNCLEAR` | `false` | 0 pts | `(empty)` |
 
@@ -131,17 +140,19 @@ Historical Intelligent Contract versions registered and audited on **GenLayer St
 
 ---
 
-## 9. Fixture & Sample Statistics (n=10 targets)
+## 9. Fixture & Sample Statistics (n=12 targets)
 
 <!-- onchain:ecosystem_views -->
-- **Total Targets Registered**: `10`
-- **Total Audits Performed**: `10`
-- **Scored Targets**: `9`
+- **Total Targets Registered**: `12`
+- **Total Audits Performed**: `12`
+- **Scored Targets**: `11`
 
 ### Leaderboard Full Audits (`best`)
 - **GoodContract Fixture** (`2bac0b36b071`): Score 100 (Grade A)
 - **ConsensusLint Ledger Contract** (`d694b3d29de5`): Score 94 (Grade A)
 - **HygieneBadges Contract** (`60285d3dfb85`): Score 94 (Grade A)
+- **ConsensusLint Ledger Contract** (`a5e2814115e4`): Score 94 (Grade A)
+- **HygieneBadges Contract** (`ead8d85fa0f0`): Score 94 (Grade A)
 - **MixedContract Fixture** (`4f74133a0a13`): Score 86 (Grade B)
 - **CitationWatch v1.2.0** (`dabbcb2fcd4e`): Score 78 (Grade C)
 - **CommitmentLedger v3.1.0** (`58e4436e4d50`): Score 74 (Grade C)

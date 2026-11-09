@@ -68,7 +68,7 @@ All transactions and audits documented below were executed on **GenLayer Studion
 ## 3. On-Chain Dogfooding (Self-Lint)
 
 <!-- onchain:self_lint -->
-ConsensusLint evaluated its own deployed contracts directly via validator re-fetch from GitHub. Under the upgraded \`MAX_SOURCE_BYTES = 120000\`, \`ConsensusLint.py\` (66,505 bytes) is **100% analyzed on-chain without truncation** (\`truncated: false\`), scoring 94 (Grade A) with 0 unlinted tail. \`HygieneBadges.py\` (22,866 bytes) is likewise 100% analyzed on-chain (\`truncated: false\`), scoring 94 (Grade A).
+ConsensusLint v1.0.1 sources at commit 8b547e3, fetched by validators from a commit-pinned URL (\`ConsensusLint.py\` at 68,032 bytes and \`HygieneBadges.py\` at 8,990 bytes), were 100% analyzed on-chain without truncation (\`truncated: false\`), both scoring 94 (Grade A) with 0 unlinted tail.
 
 | Contract | Target ID | Register Tx | Audit Tx | Agreement | Hygiene Score | Grade | Key Rule Findings |
 |---|---|---|---|---|---|---|---|
@@ -78,6 +78,20 @@ ConsensusLint evaluated its own deployed contracts directly via validator re-fet
       const isTruncated = s.auditRecord && s.auditRecord.truncated;
       const labelText = isTruncated ? `**${s.label} (partial/truncated self-lint)**` : `**${s.label}**`;
       md += `| ${labelText} | \`${s.tid}\` | [\`${s.registrationTxHash}\`](https://explorer-studio.genlayer.com/tx/${s.registrationTxHash}) | [\`${s.auditTxHash}\`](https://explorer-studio.genlayer.com/tx/${s.auditTxHash}) | \`${s.auditAgreement}\` | **${s.auditRecord.score}** | **${s.auditRecord.grade}** | \`${findingKeys}\` |\n`;
+    }
+
+    if (live.superseded_self_lint_v100) {
+      md += `
+### Superseded v1.0.0 self-lint (historical)
+<!-- onchain:superseded_self_lint -->
+The initial v1.0.0 self-lint audited the pre-v1.0.1 sources at the \`main\` branch (66,505 bytes and 8,833 bytes):
+
+| Contract | Target ID | Register Tx | Audit Tx | Agreement | Score | Grade | Notes |
+|---|---|---|---|---|---|---|---|
+`;
+      for (const [key, s] of Object.entries(live.superseded_self_lint_v100)) {
+        md += `| ${s.label} | \`${s.tid}\` | [\`${s.registrationTxHash}\`](https://explorer-studio.genlayer.com/tx/${s.registrationTxHash}) | [\`${s.auditTxHash}\`](https://explorer-studio.genlayer.com/tx/${s.auditTxHash}) | \`${s.auditAgreement}\` | **${s.auditRecord.score}** | **${s.auditRecord.grade}** | Superseded v1.0.0 self-lint |\n`;
+      }
     }
 
     md += `
@@ -191,7 +205,7 @@ Historical Intelligent Contract versions registered and audited on **GenLayer St
       md += `
 ---
 
-## 9. Fixture & Sample Statistics (n=10 targets)
+## 9. Fixture & Sample Statistics (n=${live.ecosystem_views.meta.targets_total || 10} targets)
 
 <!-- onchain:ecosystem_views -->
 - **Total Targets Registered**: \`${live.ecosystem_views.meta.targets_total}\`

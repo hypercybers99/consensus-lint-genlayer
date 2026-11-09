@@ -39,9 +39,9 @@ Evaluates historical commits from prior Intelligent Contract repositories. Rows 
 
 | Target | Repo | Commit | Relative File Path | Raw GitHub URL | Verification Command |
 |---|---|---|---|---|---|
-| `CitationWatch v1.0.0` | `huzyow155/citationwatch-genlayer` | `db7efa656f` | `contracts/SourceDriftLedger.py` | [Raw URL](https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef/contracts/SourceDriftLedger.py) | `git show db7efa656f:contracts/SourceDriftLedger.py | python scripts/tools/local_lint.py` |
-| `CitationWatch v1.1.0` | `huzyow155/citationwatch-genlayer` | `fe0e1b82bf` | `contracts/SourceDriftLedger.py` | [Raw URL](https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/fe0e1b82bf9dc51b1dbb2c7ad61fc4cb3883971a/contracts/SourceDriftLedger.py) | `git show fe0e1b82bf:contracts/SourceDriftLedger.py | python scripts/tools/local_lint.py` |
-| `CitationWatch v1.2.0` | `huzyow155/citationwatch-genlayer` | `7726ce992f` | `contracts/SourceDriftLedger.py` | [Raw URL](https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py) | `git show 7726ce992f:contracts/SourceDriftLedger.py | python scripts/tools/local_lint.py` |
+| `CitationWatch v1.0.0` | `hypercybers99/citationwatch-genlayer` | `db7efa656f` | `contracts/SourceDriftLedger.py` | [Raw URL](https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef/contracts/SourceDriftLedger.py) | `git show db7efa656f:contracts/SourceDriftLedger.py | python scripts/tools/local_lint.py` |
+| `CitationWatch v1.1.0` | `hypercybers99/citationwatch-genlayer` | `fe0e1b82bf` | `contracts/SourceDriftLedger.py` | [Raw URL](https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/fe0e1b82bf9dc51b1dbb2c7ad61fc4cb3883971a/contracts/SourceDriftLedger.py) | `git show fe0e1b82bf:contracts/SourceDriftLedger.py | python scripts/tools/local_lint.py` |
+| `CitationWatch v1.2.0` | `hypercybers99/citationwatch-genlayer` | `7726ce992f` | `contracts/SourceDriftLedger.py` | [Raw URL](https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py) | `git show 7726ce992f:contracts/SourceDriftLedger.py | python scripts/tools/local_lint.py` |
 
 ## (d) Public GenLayer Examples (Neutral Reference Measurements)
 

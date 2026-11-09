@@ -80,12 +80,12 @@ def lint_historical_projects():
 
     # 1. CommitmentLedger versions
     cl_commits = [
-        ("v1.0.0", "55514ea5c7ff724a79b99694bca90bec9fb6e44e", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/55514ea5c7ff724a79b99694bca90bec9fb6e44e/contracts/CommitmentLedger.py", None),
-        ("v2.0.0", "4490cddec15955eb726dd018be3a95f34a39d5c5", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/4490cddec15955eb726dd018be3a95f34a39d5c5/contracts/CommitmentLedger.py", None),
-        ("v2.1.0", "4fbef50953eb69e7f15bc308ad5b1509162caa46", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/4fbef50953eb69e7f15bc308ad5b1509162caa46/contracts/CommitmentLedger.py", None),
-        ("v2.2.0", "2b73b02c9983acc27f6eeadaae81bae72090e2a6", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/2b73b02c9983acc27f6eeadaae81bae72090e2a6/contracts/CommitmentLedger.py", None),
-        ("v3.0.0", "0aeab14563f2173f6d418415cb861bae996bdb02", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/0aeab14563f2173f6d418415cb861bae996bdb02/contracts/CommitmentLedger.py", None),
-        ("v3.1.0", "616d92d6abaae6771b3cdc6bdc738150a1f324c3", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/616d92d6abaae6771b3cdc6bdc738150a1f324c3/contracts/CommitmentLedger.py", "commitment_ledger_v310"),
+        ("v1.0.0", "55514ea5c7ff724a79b99694bca90bec9fb6e44e", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/55514ea5c7ff724a79b99694bca90bec9fb6e44e/contracts/CommitmentLedger.py", None),
+        ("v2.0.0", "4490cddec15955eb726dd018be3a95f34a39d5c5", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/4490cddec15955eb726dd018be3a95f34a39d5c5/contracts/CommitmentLedger.py", None),
+        ("v2.1.0", "4fbef50953eb69e7f15bc308ad5b1509162caa46", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/4fbef50953eb69e7f15bc308ad5b1509162caa46/contracts/CommitmentLedger.py", None),
+        ("v2.2.0", "2b73b02c9983acc27f6eeadaae81bae72090e2a6", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/2b73b02c9983acc27f6eeadaae81bae72090e2a6/contracts/CommitmentLedger.py", None),
+        ("v3.0.0", "0aeab14563f2173f6d418415cb861bae996bdb02", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/0aeab14563f2173f6d418415cb861bae996bdb02/contracts/CommitmentLedger.py", None),
+        ("v3.1.0", "616d92d6abaae6771b3cdc6bdc738150a1f324c3", "e:/CommitmentLedger-V1", "contracts/CommitmentLedger.py", "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/616d92d6abaae6771b3cdc6bdc738150a1f324c3/contracts/CommitmentLedger.py", "commitment_ledger_v310"),
     ]
 
     for ver, commit, repo_path, rel_file, raw_url, onchain_key in cl_commits:
@@ -116,9 +116,9 @@ def lint_historical_projects():
 
     # 2. CitationWatch versions
     cw_commits = [
-        ("v1.0.0", "db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef", "e:/CitationWatch_v1", "contracts/SourceDriftLedger.py", "https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef/contracts/SourceDriftLedger.py", "citation_watch_v100"),
-        ("v1.1.0", "fe0e1b82bf9dc51b1dbb2c7ad61fc4cb3883971a", "e:/CitationWatch_v1", "contracts/SourceDriftLedger.py", "https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/fe0e1b82bf9dc51b1dbb2c7ad61fc4cb3883971a/contracts/SourceDriftLedger.py", "citation_watch_v110"),
-        ("v1.2.0", "7726ce992fd39ac1239165c02e527456f052a697", "e:/CitationWatch_v1", "contracts/SourceDriftLedger.py", "https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py", "citation_watch_v120"),
+        ("v1.0.0", "db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef", "e:/CitationWatch_v1", "contracts/SourceDriftLedger.py", "https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef/contracts/SourceDriftLedger.py", "citation_watch_v100"),
+        ("v1.1.0", "fe0e1b82bf9dc51b1dbb2c7ad61fc4cb3883971a", "e:/CitationWatch_v1", "contracts/SourceDriftLedger.py", "https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/fe0e1b82bf9dc51b1dbb2c7ad61fc4cb3883971a/contracts/SourceDriftLedger.py", "citation_watch_v110"),
+        ("v1.2.0", "7726ce992fd39ac1239165c02e527456f052a697", "e:/CitationWatch_v1", "contracts/SourceDriftLedger.py", "https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py", "citation_watch_v120"),
     ]
 
     for ver, commit, repo_path, rel_file, raw_url, onchain_key in cw_commits:
@@ -158,7 +158,7 @@ def lint_historical_projects():
             "version": "current",
             "commit": "1d05532db56c04d7f5b6b86ce89a1fe2d9c9188e",
             "file": "contracts/GuardArena.py",
-            "raw_url": "https://raw.githubusercontent.com/huzyow155/break-the-guard-genlayer/1d05532db56c04d7f5b6b86ce89a1fe2d9c9188e/contracts/GuardArena.py",
+            "raw_url": "https://raw.githubusercontent.com/hypercybers99/break-the-guard-genlayer/1d05532db56c04d7f5b6b86ce89a1fe2d9c9188e/contracts/GuardArena.py",
             "sha256": sha,
             "command": "git show 1d05532db5:contracts/GuardArena.py | python scripts/tools/local_lint.py",
             "mode": mode,
@@ -367,7 +367,7 @@ def main():
         f.write("| Target | Repo | Commit | Relative File Path | Raw GitHub URL | Verification Command |\n")
         f.write("|---|---|---|---|---|---|\n")
         for h in history_records:
-            f.write(f"| `{h['series']} {h['version']}` | `huzyow155/{h['series'].lower()}-genlayer` | `{h['commit'][:10]}` | `{h['file']}` | [Raw URL]({h['raw_url']}) | `{h['command']}` |\n")
+            f.write(f"| `{h['series']} {h['version']}` | `hypercybers99/{h['series'].lower()}-genlayer` | `{h['commit'][:10]}` | `{h['file']}` | [Raw URL]({h['raw_url']}) | `{h['command']}` |\n")
 
         # (d)
         f.write("\n## (d) Public GenLayer Examples (Neutral Reference Measurements)\n\n")

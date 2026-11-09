@@ -33,7 +33,7 @@ class TestConsensusLintContract(unittest.TestCase):
         self.assertEqual(str(ctx.exception), "source url must use https")
 
         # 4. Success registration
-        good_url = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/good_contract.py"
+        good_url = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/good_contract.py"
         self.contract.register_target("Good Contract", "v1-series", good_url)
 
         meta = json.loads(self.contract.get_meta())
@@ -45,7 +45,7 @@ class TestConsensusLintContract(unittest.TestCase):
         self.assertEqual(str(ctx.exception), "target already registered")
 
     def test_audit_flow_and_ecosystem_stats(self):
-        good_url = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/good_contract.py"
+        good_url = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/good_contract.py"
         self.contract.register_target("Good Contract", "core", good_url)
         target_ids = json.loads(self.contract.list_target_ids(0, 10))
         tid = target_ids[0]
@@ -79,7 +79,7 @@ class TestConsensusLintContract(unittest.TestCase):
         self.assertEqual(stats["CL01"]["targets_with_finding"], 0)
 
     def test_registrant_response_flow(self):
-        bad_url = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/bad_contract.py"
+        bad_url = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/bad_contract.py"
         self.contract.register_target("Bad Contract", "test-series", bad_url)
         target_ids = json.loads(self.contract.list_target_ids(0, 10))
         tid = target_ids[0]
@@ -112,7 +112,7 @@ class TestConsensusLintContract(unittest.TestCase):
         self.assertEqual(str(ctx.exception), "finding not present in audit")
 
     def test_progress_tracking(self):
-        url = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/evolving_contract.py"
+        url = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/evolving_contract.py"
         self.contract.register_target("Evolving", "series-ev", url)
         tid = json.loads(self.contract.list_target_ids(0, 1))[0]
 
@@ -141,7 +141,7 @@ class TestConsensusLintContract(unittest.TestCase):
 
     def test_truncated_score_capped_at_89_and_board_separation(self):
         # Register a target with content > 120,000 bytes
-        url_large = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/shell_like.py"
+        url_large = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/shell_like.py"
         self.contract.register_target("ShellLike Large", "fixtures", url_large)
         tid_large = json.loads(self.contract.list_target_ids(0, 1))[0]
 
@@ -159,7 +159,7 @@ class TestConsensusLintContract(unittest.TestCase):
         self.assertEqual(audit["grade"], "B")
 
         # Register and audit a small clean contract for comparison
-        url_clean = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/good_contract.py"
+        url_clean = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/good_contract.py"
         self.contract.register_target("GoodContract", "fixtures", url_clean)
         tid_clean = json.loads(self.contract.list_target_ids(0, 1))[0]
 

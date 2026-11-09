@@ -130,7 +130,7 @@ async function main() {
 
   // P2 & P3: Web Fetch & Validator-safe pattern
   console.log("\n--- P2 & P3: Web Fetch Probing on raw.githubusercontent.com ---");
-  const testUrl = "https://raw.githubusercontent.com/huzyow155/consensus-lint-genlayer/refs/heads/main/README.md";
+  const testUrl = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/refs/heads/main/README.md";
   // We can also test a known public raw github url that definitely exists
   const publicTestUrl = "https://raw.githubusercontent.com/octocat/Hello-World/master/README";
   console.log("Testing raw fetch on:", publicTestUrl);

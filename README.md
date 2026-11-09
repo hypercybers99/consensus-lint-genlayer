@@ -101,8 +101,7 @@ The hygiene score begins at 100 and applies deducted weights per rule with per-r
 - **Grade F**: 0 - 59 (Failed structural requirements or `NOT_A_CONTRACT`)
 
 Dogfooding result:
-- Under v1.0.1 with `MAX_SOURCE_BYTES = 120000`, `ConsensusLint.py` (66,505 bytes) is **100% analyzed on-chain without truncation** (`truncated: false`), scoring **94** (Grade A) with 0 unlinted tail.
-- `HygieneBadges.py` (22,866 bytes) is also 100% analyzed on-chain (`truncated: false`), scoring **94** (Grade A).
+ConsensusLint v1.0.1 sources at commit 8b547e3, fetched by validators from a commit-pinned URL (`ConsensusLint.py` at 68,032 bytes and `HygieneBadges.py` at 8,990 bytes), were 100% analyzed on-chain without truncation (`truncated: false`), both scoring **94** (Grade A) with 0 unlinted tail.
 
 ---
 

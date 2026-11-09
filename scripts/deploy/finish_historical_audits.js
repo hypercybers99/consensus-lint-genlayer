@@ -129,7 +129,7 @@ async function main() {
   evidence.historical_targets["citation_watch_v120"] = {
     label: "CitationWatch v1.2.0",
     series: "CitationWatch",
-    url: "https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py",
+    url: "https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py",
     tid: tid120,
     registrationTxHash: "0x0a9325a7bdb8b69445a6aac6164b88db22849c8c1580e0a6754356a47c55f748",
     registrationElapsed: 8.80,
@@ -146,7 +146,7 @@ async function main() {
   fs.writeFileSync(evidencePath, JSON.stringify(evidence, null, 2), 'utf8');
 
   // 3. Register & audit CommitmentLedger v3.1.0
-  const clUrl = "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/616d92d6abaae6771b3cdc6bdc738150a1f324c3/contracts/CommitmentLedger.py";
+  const clUrl = "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/616d92d6abaae6771b3cdc6bdc738150a1f324c3/contracts/CommitmentLedger.py";
   console.log(`\nRegistering CommitmentLedger v3.1.0...`);
   const tRegCl0 = Date.now();
   const regClTxHash = await retryCall(() => client.writeContract({

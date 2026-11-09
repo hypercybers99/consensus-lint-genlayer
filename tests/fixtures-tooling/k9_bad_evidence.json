@@ -1,0 +1,18 @@
+{
+  "self_lint": {
+    "ConsensusLint": {
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/main/contracts/ConsensusLint.py",
+      "auditRecord": {
+        "source_bytes": 66505,
+        "source_sha256": "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b"
+      }
+    },
+    "HygieneBadges": {
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/main/contracts/HygieneBadges.py",
+      "auditRecord": {
+        "source_bytes": 22866,
+        "source_sha256": "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8"
+      }
+    }
+  }
+}

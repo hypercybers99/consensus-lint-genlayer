@@ -224,37 +224,37 @@ async function main() {
       key: "good_contract",
       label: "GoodContract Fixture",
       series: "Fixtures",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/good_contract.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/good_contract.py",
     },
     {
       key: "bad_contract",
       label: "BadContract Fixture",
       series: "Fixtures",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/bad_contract.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/bad_contract.py",
     },
     {
       key: "mixed_contract",
       label: "MixedContract Fixture",
       series: "Fixtures",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/mixed_contract.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/mixed_contract.py",
     },
     {
       key: "not_a_contract",
       label: "NotAContract Fixture",
       series: "Fixtures",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/not_a_contract.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/not_a_contract.py",
     },
     {
       key: "shell_like",
       label: "ShellLike Large Fixture",
       series: "Fixtures",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/shell_like.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/shell_like.py",
     },
     {
       key: "evolving_contract",
       label: "EvolvingContract Fixture",
       series: "Fixtures",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/evolving_contract.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/evolving_contract.py",
     },
   ];
 
@@ -323,13 +323,13 @@ async function main() {
       key: "ConsensusLint",
       label: "ConsensusLint Ledger Contract",
       series: "ConsensusLint Core",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-genlayer/main/contracts/ConsensusLint.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/main/contracts/ConsensusLint.py",
     },
     {
       key: "HygieneBadges",
       label: "HygieneBadges Contract",
       series: "ConsensusLint Core",
-      url: "https://raw.githubusercontent.com/huzyow155/consensus-lint-genlayer/main/contracts/HygieneBadges.py",
+      url: "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/main/contracts/HygieneBadges.py",
     },
   ];
 
@@ -562,7 +562,7 @@ async function main() {
     () => client.writeContract({
       address: lintAddress,
       functionName: 'register_target',
-      args: ['GoodContract Duplicate', 'Fixtures', 'https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/good_contract.py'],
+      args: ['GoodContract Duplicate', 'Fixtures', 'https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/good_contract.py'],
     })
   );
   await sleep(2000);

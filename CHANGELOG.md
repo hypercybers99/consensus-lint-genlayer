@@ -16,6 +16,7 @@ All notable changes to the ConsensusLint project are documented in this file.
 - **`MAX_SOURCE_BYTES` Increased to 120,000**: Probed and benchmarked on GenLayer Studionet (Preview). Under 120 KB limit, `ConsensusLint.py` (66,505 bytes) is 100% analyzed on-chain without truncation (`truncated: false`), scoring Grade A (94) with 0 unlinted tail.
 - **Truncated Score Capping**: `_compute_score_and_penalty` strictly caps score at 89 whenever `truncated == True`, aligning numerical scores with Grade B cap.
 - **Model Layer J2 Prompt Clarification**: Added explicit clarification that comparing a computed SHA-256 digest to an expected digest (`hashlib.sha256(...).hexdigest() == expected`) is deterministic and MUST be classified as `ENUM_OR_BUCKET` (0 penalty). On-chain test confirms GoodContract received 0 penalty on J2 and achieved Score 100 (Grade A).
+- **Self-Lint Evidence Correction**: Audited commit-pinned v1.0.1 sources at 8b547e3 (ConsensusLint.py 68,032 bytes and HygieneBadges.py 8,990 bytes) on-chain.
 - **Active Deployment Redeployed**:
   - ConsensusLint: `0xDd9c4b5d187664780142f24E4327D48Db59363D7` (SHA-256 `ce592840fda0a61d2f3d0ea39aaaa5ba2c6da0929ee9a6a7654cf7e74c0d3e25`)
   - HygieneBadges: `0xbd8d4F05423Dd98e2A1F911A371911c1671Eb140` (SHA-256 `6d2a48275d31556f42ac8fed0b0c91ecace9300e3f60592643b5bf98e3009923`)

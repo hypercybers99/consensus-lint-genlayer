@@ -10,7 +10,7 @@
     "good_contract": {
       "label": "GoodContract Fixture",
       "series": "Fixtures",
-      "url": "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/good_contract.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/good_contract.py",
       "tid": "2bac0b36b071",
       "registrationTxHash": "0xadebf1cc2d33a6c1220b3cf9f89fe7a331993fc8cab682b9a198378ab843fc9a",
       "registrationElapsed": 9.25,
@@ -69,7 +69,7 @@
     "mixed_contract": {
       "label": "MixedContract Fixture",
       "series": "Fixtures",
-      "url": "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/mixed_contract.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/mixed_contract.py",
       "tid": "4f74133a0a13",
       "registrationTxHash": "0xb1787d0993a8ef6cd6700160984871072ec6f1885d38a4431b2edd59efc64e7f",
       "registrationElapsed": 5.56,
@@ -143,7 +143,7 @@
     "bad_contract": {
       "label": "BadContract Fixture",
       "series": "Fixtures",
-      "url": "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/bad_contract.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/bad_contract.py",
       "tid": "c74c8288839d",
       "registrationTxHash": "0x2bc8fccf4ef386e6bf834572bf1acbe4583739b2fb5978ed37d12e0daa792d70",
       "registrationElapsed": 5.42,
@@ -407,7 +407,7 @@
     "not_a_contract": {
       "label": "NotAContract Fixture",
       "series": "Fixtures",
-      "url": "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/not_a_contract.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/not_a_contract.py",
       "tid": "fc8f14409f6b",
       "registrationTxHash": "0x31ba6d9603c23b8d708b1e2dad54bb1660f5ef6d6c6587fdcfe505b6a08a56a2",
       "registrationElapsed": 8.72,
@@ -447,7 +447,7 @@
     "shell_like": {
       "label": "ShellLike Large Fixture",
       "series": "Fixtures",
-      "url": "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/shell_like.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/shell_like.py",
       "tid": "dca608d38708",
       "registrationTxHash": "0xab53bb3ab5efb73d8adbab4afb81706c2aee92555691134f2f5bfc2029f04de2",
       "registrationElapsed": 8.86,
@@ -489,33 +489,47 @@
     "ConsensusLint": {
       "label": "ConsensusLint Ledger Contract",
       "series": "ConsensusLint Core",
-      "url": "https://raw.githubusercontent.com/huzyow155/consensus-lint-genlayer/main/contracts/ConsensusLint.py",
-      "tid": "d694b3d29de5",
-      "registrationTxHash": "0x9758f53cf57b962138b9015aa7f5d1b2f1f5eb7a8a9910df62fee1dc74292509",
-      "registrationElapsed": 8.8,
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/8b547e3a3257e5d24bf74463a5271c39d6bcb375/contracts/ConsensusLint.py",
+      "tid": "a5e2814115e4",
+      "registrationTxHash": "0x722b5d235239fcf8dc21b82309292c9e920abb8f63784933be5feb897316ff56",
+      "registrationElapsed": 6.44,
       "registrationAgreement": "3/5",
-      "auditTxHash": "0xa420f016e573f7dc37bb6d3e1bc2a179b5872890e5086bdbb7850152b2ae6a97",
-      "auditElapsed": 45.6,
+      "registrationVotes": {
+        "0x709a1dDECA594C16AB3864A00Eaa2BB1Cd9b5305": "idle",
+        "0x711353514049EAc21213834ADd07eF552aF394E6": "idle",
+        "0x8ADae333478F9D037c78b0E3E8279DdAAb20a1B3": "agree",
+        "0x8f1abcAF0fF10678Af925f83b2Bb8b3534c4b94b": "agree",
+        "0xe1626534791FC675ED813Cc2C89C427866526113": "agree"
+      },
+      "auditTxHash": "0x22cfe32c0ce4c7e621571e04a76943bea4eb6fe4b09ea0c89a65f9570a6c69a5",
+      "auditElapsed": 25.33,
       "auditAgreement": "3/5",
+      "auditVotes": {
+        "0x29300188B54F5BFEE91542595611603b4B201008": "idle",
+        "0x37CD8552B86b2B662eCfb69C4A1253dBE41EB4C1": "agree",
+        "0x8ADae333478F9D037c78b0E3E8279DdAAb20a1B3": "agree",
+        "0xc675c2B7E1F066B7c1D2fe54EF7B76C91CdFa5F4": "idle",
+        "0xe1626534791FC675ED813Cc2C89C427866526113": "agree"
+      },
       "summary": {
-        "id": "d694b3d29de5",
+        "id": "a5e2814115e4",
         "label": "ConsensusLint Ledger Contract",
         "latest_grade": "A",
         "latest_n": 1,
         "latest_score": 94,
-        "latest_source_sha256": "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b",
-        "ref_kind": "MUTABLE_REF",
+        "latest_source_sha256": "ce592840fda0a61d2f3d0ea39aaaa5ba2c6da0929ee9a6a7654cf7e74c0d3e25",
+        "ref_kind": "PINNED_COMMIT",
         "truncated": false
       },
       "auditRecord": {
-        "at": "2026-10-31T09:29:30Z",
+        "at": "2026-11-09T13:02:54Z",
         "auditor": "0xe2d9062adc5f4b6061788996f859b224a7a8745c",
         "findings": {
           "CL06": {
             "count": 1,
             "items": [
               {
-                "line": 1165,
+                "line": 1181,
                 "snippet": "def respond_to_finding(self, target_id: str, audit_n: int, rule_id: str, stance: str, note: str) -> None:"
               }
             ],
@@ -526,7 +540,7 @@
             "count": 1,
             "items": [
               {
-                "line": 1165,
+                "line": 1181,
                 "snippet": "def respond_to_finding(self, target_id: str, audit_n: int, rule_id: str, stance: str, note: str) -> None:"
               }
             ],
@@ -539,18 +553,18 @@
           {
             "fn": "validator_fn",
             "id": "J1",
-            "label": "UNCLEAR",
-            "line_start": 1047,
-            "quote": "",
-            "quote_verified": false,
+            "label": "RECOMPUTES",
+            "line_start": 1053,
+            "quote": "linter = _LinterEngine(norm_text)\n            try:\n                val_mode, val_findings, val_counts, val_call_sites = linter.run()",
+            "quote_verified": true,
             "site": 0
           },
           {
             "fn": "validator_fn",
             "id": "J2",
             "label": "ENUM_OR_BUCKET",
-            "line_start": 1047,
-            "quote": "if val_bucket != lead_data.get(\"penalty_bucket\"):\n                return False",
+            "line_start": 1053,
+            "quote": "if val_score != lead_data.get(\"score\"):\n                return False\n\n            if val_bucket != lead_data.get(\"penalty_bucket\"):",
             "quote_verified": true,
             "site": 0
           },
@@ -558,7 +572,7 @@
             "fn": "prompt_call",
             "id": "J3",
             "label": "UNCLEAR",
-            "line_start": 1001,
+            "line_start": 1005,
             "quote": "",
             "quote_verified": false,
             "site": 0
@@ -567,7 +581,7 @@
             "fn": "validator_fn",
             "id": "J3",
             "label": "UNCLEAR",
-            "line_start": 1047,
+            "line_start": 1053,
             "quote": "",
             "quote_verified": false,
             "site": 1
@@ -579,43 +593,57 @@
         "responses": [],
         "score": 94,
         "sdk_pin": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
-        "source_bytes": 66505,
-        "source_sha256": "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b",
-        "target_id": "d694b3d29de5",
+        "source_bytes": 68032,
+        "source_sha256": "ce592840fda0a61d2f3d0ea39aaaa5ba2c6da0929ee9a6a7654cf7e74c0d3e25",
+        "target_id": "a5e2814115e4",
         "truncated": false,
-        "ts": 1793438970
+        "ts": 1794229374
       }
     },
     "HygieneBadges": {
       "label": "HygieneBadges Contract",
       "series": "ConsensusLint Core",
-      "url": "https://raw.githubusercontent.com/huzyow155/consensus-lint-genlayer/main/contracts/HygieneBadges.py",
-      "tid": "60285d3dfb85",
-      "registrationTxHash": "0x826856831ae04e0384e5a7fafb58dde93e551c5bbd8480454931997e64364863",
-      "registrationElapsed": 8.85,
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/8b547e3a3257e5d24bf74463a5271c39d6bcb375/contracts/HygieneBadges.py",
+      "tid": "ead8d85fa0f0",
+      "registrationTxHash": "0xa6f5a99d02a23cd2d9817eb0fd92cd0be694e76bc063af5fb70ec601a09ac916",
+      "registrationElapsed": 10.92,
       "registrationAgreement": "3/5",
-      "auditTxHash": "0x5dc8b103f6eeff5783578cf907b9559c5e222fe1a74c88f6784268a5e7073904",
-      "auditElapsed": 11.96,
+      "registrationVotes": {
+        "0x2bB088e4E6Fd1faBBd23d93F38D01f28a954A49c": "agree",
+        "0x8f1abcAF0fF10678Af925f83b2Bb8b3534c4b94b": "idle",
+        "0xD0eD149D26E76cf49fB588c970E608E44Dd4DAB8": "agree",
+        "0xe1626534791FC675ED813Cc2C89C427866526113": "idle",
+        "0xf1EAD5E5f876eae701eF1881b42861079cd9A287": "agree"
+      },
+      "auditTxHash": "0x8a47d96342ec940756374087d38ab08fb6f9a118709a5e391566151d6b7b98ed",
+      "auditElapsed": 12.99,
       "auditAgreement": "3/5",
+      "auditVotes": {
+        "0x0174b4D7494Be33F46B76976f6c9F94004F1b27f": "agree",
+        "0x709a1dDECA594C16AB3864A00Eaa2BB1Cd9b5305": "idle",
+        "0x722474B013fA39E5aA8785f927dCeB0e3F89815B": "agree",
+        "0x8ADae333478F9D037c78b0E3E8279DdAAb20a1B3": "idle",
+        "0xD0eD149D26E76cf49fB588c970E608E44Dd4DAB8": "agree"
+      },
       "summary": {
-        "id": "60285d3dfb85",
+        "id": "ead8d85fa0f0",
         "label": "HygieneBadges Contract",
         "latest_grade": "A",
         "latest_n": 1,
         "latest_score": 94,
-        "latest_source_sha256": "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8",
-        "ref_kind": "MUTABLE_REF",
+        "latest_source_sha256": "6d2a48275d31556f42ac8fed0b0c91ecace9300e3f60592643b5bf98e3009923",
+        "ref_kind": "PINNED_COMMIT",
         "truncated": false
       },
       "auditRecord": {
-        "at": "2026-10-31T09:30:36Z",
+        "at": "2026-11-09T13:03:40Z",
         "auditor": "0xe2d9062adc5f4b6061788996f859b224a7a8745c",
         "findings": {
           "CL06": {
             "count": 1,
             "items": [
               {
-                "line": 161,
+                "line": 165,
                 "snippet": "def refresh_badge(self, badge_id: str) -> None:"
               }
             ],
@@ -642,11 +670,11 @@
         "responses": [],
         "score": 94,
         "sdk_pin": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
-        "source_bytes": 8833,
-        "source_sha256": "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8",
-        "target_id": "60285d3dfb85",
+        "source_bytes": 8990,
+        "source_sha256": "6d2a48275d31556f42ac8fed0b0c91ecace9300e3f60592643b5bf98e3009923",
+        "target_id": "ead8d85fa0f0",
         "truncated": false,
-        "ts": 1793439036
+        "ts": 1794229420
       }
     }
   },
@@ -654,7 +682,7 @@
     "citation_watch_v100": {
       "label": "CitationWatch v1.0.0",
       "series": "CitationWatch",
-      "url": "https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef/contracts/SourceDriftLedger.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/db7efa656f3ceb14d40b3607f1037fdcbcfdf6ef/contracts/SourceDriftLedger.py",
       "tid": "f96c34d309a7",
       "registrationTxHash": "0x662daa8148d1d67140b9dc60e899838e3732e1b73e19a9a1179083e0b40461be",
       "registrationElapsed": 8.79,
@@ -777,7 +805,7 @@
     "citation_watch_v120": {
       "label": "CitationWatch v1.2.0",
       "series": "CitationWatch",
-      "url": "https://raw.githubusercontent.com/huzyow155/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/citation-watch-genlayer/7726ce992fd39ac1239165c02e527456f052a697/contracts/SourceDriftLedger.py",
       "tid": "dabbcb2fcd4e",
       "registrationTxHash": "0xc3ee29a525f72338fbf8250876dadd7417ac8af3e84015f22cc8ce18b7c43849",
       "registrationElapsed": 5.58,
@@ -913,7 +941,7 @@
     "commitment_ledger_v310": {
       "label": "CommitmentLedger v3.1.0",
       "series": "CommitmentLedger",
-      "url": "https://raw.githubusercontent.com/huzyow155/commitment-ledger-genlayer/616d92d6abaae6771b3cdc6bdc738150a1f324c3/contracts/CommitmentLedger.py",
+      "url": "https://raw.githubusercontent.com/hypercybers99/commitment-ledger-genlayer/616d92d6abaae6771b3cdc6bdc738150a1f324c3/contracts/CommitmentLedger.py",
       "tid": "58e4436e4d50",
       "registrationTxHash": "0x902d4071ea59aaf7ced4c2488ff07077c3dccefea119fea51780d159769e44f2",
       "registrationElapsed": 8.61,
@@ -1168,6 +1196,18 @@
           "score": 94
         },
         {
+          "grade": "A",
+          "id": "a5e2814115e4",
+          "label": "ConsensusLint Ledger Contract",
+          "score": 94
+        },
+        {
+          "grade": "A",
+          "id": "ead8d85fa0f0",
+          "label": "HygieneBadges Contract",
+          "score": 94
+        },
+        {
           "grade": "B",
           "id": "4f74133a0a13",
           "label": "MixedContract Fixture",
@@ -1209,213 +1249,176 @@
         }
       ]
     },
-    "rule_stats": {
-      "CL01": {
-        "name": "Missing or invalid version header",
-        "severity": "MINOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL02": {
-        "name": "Missing or invalid py-genlayer dependency pin",
-        "severity": "MAJOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL03": {
-        "name": "Non-ASCII characters in contract source",
-        "severity": "MINOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL04": {
-        "name": "Not a GenLayer contract class",
-        "severity": "INFO",
-        "share_pct": 0,
-        "targets_scored_total": 9,
-        "targets_with_finding": 0
-      },
-      "CL05": {
-        "name": "TreeMap assignment in __init__",
-        "severity": "MAJOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL06": {
-        "name": "Unbounded list load-append-store pattern",
-        "severity": "MINOR",
-        "share_pct": 66.67,
-        "targets_scored_total": 9,
-        "targets_with_finding": 6
-      },
-      "CL07": {
-        "name": "strict_eq on dynamic payload or free-text",
-        "severity": "MAJOR",
-        "share_pct": 22.22,
-        "targets_scored_total": 9,
-        "targets_with_finding": 2
-      },
-      "CL08": {
-        "name": "Non-deterministic call outside consensus wrapper",
-        "severity": "MAJOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL09": {
-        "name": "Validator does not recompute verdict",
-        "severity": "CRITICAL",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL10": {
-        "name": "Validator accesses calldata without Return check",
-        "severity": "MAJOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL11": {
-        "name": "Validator waves through failures in except handler",
-        "severity": "MAJOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL12": {
-        "name": "Silent default fallback on model parse failure",
-        "severity": "MAJOR",
-        "share_pct": 44.44,
-        "targets_scored_total": 9,
-        "targets_with_finding": 4
-      },
-      "CL13": {
-        "name": "Wall-clock time call used",
-        "severity": "MAJOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL14": {
-        "name": "Generic exception or assert in public methods",
-        "severity": "MINOR",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      },
-      "CL15": {
-        "name": "URL validation by substring or prefix check",
-        "severity": "MAJOR",
-        "share_pct": 22.22,
-        "targets_scored_total": 9,
-        "targets_with_finding": 2
-      },
-      "CL16": {
-        "name": "Unbounded string parameter in public write method",
-        "severity": "MINOR",
-        "share_pct": 77.78,
-        "targets_scored_total": 9,
-        "targets_with_finding": 7
-      },
-      "CL17": {
-        "name": "Unpaginated view method iterating collection",
-        "severity": "MINOR",
-        "share_pct": 22.22,
-        "targets_scored_total": 9,
-        "targets_with_finding": 2
-      },
-      "CL18": {
-        "name": "Public parameter in prompt without sanitization",
-        "severity": "INFO",
-        "share_pct": 11.11,
-        "targets_scored_total": 9,
-        "targets_with_finding": 1
-      }
-    },
     "meta": {
-      "audits_total": "10",
-      "nonce": "10",
-      "targets_scored_total": "9",
-      "targets_total": "10"
-    },
-    "fixtures_series": [
-      {
-        "id": "2bac0b36b071",
-        "label": "GoodContract Fixture",
-        "series": "Fixtures",
-        "ref": "main",
-        "latest_grade": "A",
-        "latest_score": 100,
-        "latest_n": 1,
-        "registered_at": "2026-10-31T09:26:03Z"
-      },
-      {
-        "id": "4f74133a0a13",
-        "label": "MixedContract Fixture",
-        "series": "Fixtures",
-        "ref": "main",
-        "latest_grade": "B",
-        "latest_score": 86,
-        "latest_n": 1,
-        "registered_at": "2026-10-31T09:26:49Z"
-      },
-      {
-        "id": "c74c8288839d",
-        "label": "BadContract Fixture",
-        "series": "Fixtures",
-        "ref": "main",
-        "latest_grade": "F",
-        "latest_score": 0,
-        "latest_n": 1,
-        "registered_at": "2026-10-31T09:27:17Z"
-      },
-      {
-        "id": "fc8f14409f6b",
-        "label": "NotAContract Fixture",
-        "series": "Fixtures",
-        "ref": "main",
-        "latest_grade": "N/A",
-        "latest_score": -1,
-        "latest_n": 1,
-        "registered_at": "2026-10-31T09:28:13Z"
-      },
-      {
-        "id": "dca608d38708",
-        "label": "ShellLike Large Fixture",
-        "series": "Fixtures",
-        "ref": "main",
-        "latest_grade": "B",
-        "latest_score": 89,
-        "latest_n": 1,
-        "registered_at": "2026-10-31T09:28:45Z"
-      }
-    ],
-    "core_series": [
-      {
+      "audits_total": "12",
+      "nonce": "12",
+      "targets_scored_total": "11",
+      "targets_total": "12"
+    }
+  },
+  "superseded_self_lint_v100": {
+    "ConsensusLint": {
+      "label": "ConsensusLint Ledger Contract",
+      "series": "ConsensusLint Core",
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/main/contracts/ConsensusLint.py",
+      "tid": "d694b3d29de5",
+      "registrationTxHash": "0x9758f53cf57b962138b9015aa7f5d1b2f1f5eb7a8a9910df62fee1dc74292509",
+      "registrationElapsed": 8.8,
+      "registrationAgreement": "3/5",
+      "auditTxHash": "0xa420f016e573f7dc37bb6d3e1bc2a179b5872890e5086bdbb7850152b2ae6a97",
+      "auditElapsed": 45.6,
+      "auditAgreement": "3/5",
+      "summary": {
         "id": "d694b3d29de5",
         "label": "ConsensusLint Ledger Contract",
-        "series": "ConsensusLint Core",
-        "ref": "main",
         "latest_grade": "A",
-        "latest_score": 94,
         "latest_n": 1,
-        "registered_at": "2026-10-31T09:29:17Z"
+        "latest_score": 94,
+        "latest_source_sha256": "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b",
+        "ref_kind": "MUTABLE_REF",
+        "truncated": false
       },
-      {
+      "auditRecord": {
+        "at": "2026-10-31T09:29:30Z",
+        "auditor": "0xe2d9062adc5f4b6061788996f859b224a7a8745c",
+        "findings": {
+          "CL06": {
+            "count": 1,
+            "items": [
+              {
+                "line": 1165,
+                "snippet": "def respond_to_finding(self, target_id: str, audit_n: int, rule_id: str, stance: str, note: str) -> None:"
+              }
+            ],
+            "method": "HEURISTIC",
+            "severity": "MINOR"
+          },
+          "CL16": {
+            "count": 1,
+            "items": [
+              {
+                "line": 1165,
+                "snippet": "def respond_to_finding(self, target_id: str, audit_n: int, rule_id: str, stance: str, note: str) -> None:"
+              }
+            ],
+            "method": "HEURISTIC",
+            "severity": "MINOR"
+          }
+        },
+        "grade": "A",
+        "judgements": [
+          {
+            "fn": "validator_fn",
+            "id": "J1",
+            "label": "UNCLEAR",
+            "line_start": 1047,
+            "quote": "",
+            "quote_verified": false,
+            "site": 0
+          },
+          {
+            "fn": "validator_fn",
+            "id": "J2",
+            "label": "ENUM_OR_BUCKET",
+            "line_start": 1047,
+            "quote": "if val_bucket != lead_data.get(\"penalty_bucket\"):\n                return False",
+            "quote_verified": true,
+            "site": 0
+          },
+          {
+            "fn": "prompt_call",
+            "id": "J3",
+            "label": "UNCLEAR",
+            "line_start": 1001,
+            "quote": "",
+            "quote_verified": false,
+            "site": 0
+          },
+          {
+            "fn": "validator_fn",
+            "id": "J3",
+            "label": "UNCLEAR",
+            "line_start": 1047,
+            "quote": "",
+            "quote_verified": false,
+            "site": 1
+          }
+        ],
+        "mode": "CONTRACT",
+        "model_penalty": 0,
+        "n": 1,
+        "responses": [],
+        "score": 94,
+        "sdk_pin": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
+        "source_bytes": 66505,
+        "source_sha256": "04337cfc91fe45f76042dba860adf4d9f1567e68fabb525838fa7dffaf4d313b",
+        "target_id": "d694b3d29de5",
+        "truncated": false,
+        "ts": 1793438970
+      }
+    },
+    "HygieneBadges": {
+      "label": "HygieneBadges Contract",
+      "series": "ConsensusLint Core",
+      "url": "https://raw.githubusercontent.com/hypercybers99/consensus-lint-genlayer/main/contracts/HygieneBadges.py",
+      "tid": "60285d3dfb85",
+      "registrationTxHash": "0x826856831ae04e0384e5a7fafb58dde93e551c5bbd8480454931997e64364863",
+      "registrationElapsed": 8.85,
+      "registrationAgreement": "3/5",
+      "auditTxHash": "0x5dc8b103f6eeff5783578cf907b9559c5e222fe1a74c88f6784268a5e7073904",
+      "auditElapsed": 11.96,
+      "auditAgreement": "3/5",
+      "summary": {
         "id": "60285d3dfb85",
         "label": "HygieneBadges Contract",
-        "series": "ConsensusLint Core",
-        "ref": "main",
         "latest_grade": "A",
-        "latest_score": 94,
         "latest_n": 1,
-        "registered_at": "2026-10-31T09:30:22Z"
+        "latest_score": 94,
+        "latest_source_sha256": "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8",
+        "ref_kind": "MUTABLE_REF",
+        "truncated": false
+      },
+      "auditRecord": {
+        "at": "2026-10-31T09:30:36Z",
+        "auditor": "0xe2d9062adc5f4b6061788996f859b224a7a8745c",
+        "findings": {
+          "CL06": {
+            "count": 1,
+            "items": [
+              {
+                "line": 161,
+                "snippet": "def refresh_badge(self, badge_id: str) -> None:"
+              }
+            ],
+            "method": "HEURISTIC",
+            "severity": "MINOR"
+          },
+          "CL16": {
+            "count": 1,
+            "items": [
+              {
+                "line": 88,
+                "snippet": "def claim_badge(self, target_id: str, display_name: str) -> None:"
+              }
+            ],
+            "method": "HEURISTIC",
+            "severity": "MINOR"
+          }
+        },
+        "grade": "A",
+        "judgements": [],
+        "mode": "CONTRACT",
+        "model_penalty": 0,
+        "n": 1,
+        "responses": [],
+        "score": 94,
+        "sdk_pin": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
+        "source_bytes": 8833,
+        "source_sha256": "64181bc3a3965e9427039a8dec504f0c25aeb4e7e9186b54ba426aadb5bb48b8",
+        "target_id": "60285d3dfb85",
+        "truncated": false,
+        "ts": 1793439036
       }
-    ]
+    }
   }
 }

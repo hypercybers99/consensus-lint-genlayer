@@ -41,7 +41,7 @@ class TestHygieneBadgesContract(unittest.TestCase):
         self.badges.set_ledger(self.ledger_addr)
 
         # Register target in ledger
-        good_url = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/good_contract.py"
+        good_url = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/4a1999768180230ebc990f4177f0d5dd5b6f10a6/good_contract.py"
         self.ledger.register_target("Good Contract", "main", good_url)
         target_ids = json.loads(self.ledger.list_target_ids(0, 1))
         tid = target_ids[0]
@@ -76,7 +76,7 @@ class TestHygieneBadgesContract(unittest.TestCase):
     def test_refresh_badge_status_transitions(self):
         self.badges.set_ledger(self.ledger_addr)
 
-        url = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/evolving_contract.py"
+        url = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/evolving_contract.py"
         self.ledger.register_target("Evolving", "series-ev", url)
         tid = json.loads(self.ledger.list_target_ids(0, 1))[0]
 
@@ -114,7 +114,7 @@ class TestHygieneBadgesContract(unittest.TestCase):
 
     def test_claim_badge_refuses_truncated_audit(self):
         self.badges.set_ledger(self.ledger_addr)
-        url_large = "https://raw.githubusercontent.com/huzyow155/consensus-lint-fixtures/main/shell_like.py"
+        url_large = "https://raw.githubusercontent.com/hypercybers99/consensus-lint-fixtures/main/shell_like.py"
         self.ledger.register_target("ShellLike Large", "fixtures", url_large)
         tid_large = json.loads(self.ledger.list_target_ids(0, 1))[0]
 

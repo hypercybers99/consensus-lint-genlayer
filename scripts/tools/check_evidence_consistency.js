@@ -306,6 +306,67 @@ function checkK8_TruncationIntegrity(liveEvidence, docPath) {
   return errors;
 }
 
+// K9: Self-lint record's source_sha256 equals local file sha256 at commit named in URL, and doc byte sizes equal real file sizes
+function checkK9_SelfLintIntegrity(liveEvidence, docPaths = [], contractDirOverride = null) {
+  const errors = [];
+  if (!liveEvidence || !liveEvidence.self_lint) return errors;
+
+  const rootDir = path.resolve(__dirname, '../..');
+  const contractsDir = contractDirOverride || path.join(rootDir, 'contracts');
+
+  const filesMap = {
+    'ConsensusLint': {
+      fullPath: path.join(contractsDir, 'ConsensusLint.py'),
+    },
+    'HygieneBadges': {
+      fullPath: path.join(contractsDir, 'HygieneBadges.py'),
+    },
+  };
+
+  const realHashes = {};
+  const realSizes = {};
+  for (const [key, info] of Object.entries(filesMap)) {
+    if (fs.existsSync(info.fullPath)) {
+      const buf = fs.readFileSync(info.fullPath);
+      realSizes[key] = buf.length;
+      realHashes[key] = crypto.createHash('sha256').update(buf).digest('hex');
+    }
+  }
+
+  for (const [key, s] of Object.entries(liveEvidence.self_lint)) {
+    const rec = s.auditRecord || {};
+    const expectedHash = realHashes[key];
+    const expectedSize = realSizes[key];
+
+    if (expectedHash && rec.source_sha256 !== expectedHash) {
+      errors.push(`[K9 FAIL] Self-lint '${key}': source_sha256 ${rec.source_sha256} does not match local file sha256 ${expectedHash}`);
+    }
+    if (expectedSize && rec.source_bytes !== expectedSize) {
+      errors.push(`[K9 FAIL] Self-lint '${key}': source_bytes ${rec.source_bytes} does not match local file size ${expectedSize}`);
+    }
+
+    if (s.url) {
+      const match = s.url.match(/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/([0-9a-fA-F]{40})\//);
+      if (!match) {
+        errors.push(`[K9 FAIL] Self-lint '${key}': URL is not commit-pinned: ${s.url}`);
+      }
+    } else {
+      errors.push(`[K9 FAIL] Self-lint '${key}': missing URL`);
+    }
+  }
+
+  for (const dPath of docPaths) {
+    if (!fs.existsSync(dPath)) continue;
+    const content = fs.readFileSync(dPath, 'utf8');
+    if (content.includes('22,866') || content.includes('22866')) {
+      errors.push(`[K9 FAIL] ${path.basename(dPath)} quotes incorrect byte size 22,866 (HygieneBadges is 8,990 bytes)`);
+    }
+  }
+
+  return errors;
+}
+
+
 function runFullChecker(options = {}) {
   const rootDir = path.resolve(__dirname, '../..');
   const deployDir = path.join(rootDir, 'scripts/deploy');
@@ -324,7 +385,8 @@ function runFullChecker(options = {}) {
     path.join(rootDir, 'scripts/probes/run_probes.js'),
   ].filter(f => fs.existsSync(f));
 
-  console.log("=== RUNNING CONSISTENCY CHECKER (K1 - K8) ===");
+  
+console.log("=== RUNNING CONSISTENCY CHECKER (K1 - K9) ===");
   const allErrors = [];
 
   // Basic deployments check
@@ -422,6 +484,17 @@ function runFullChecker(options = {}) {
     allErrors.push(...k8Errors);
   }
 
+  // K9
+  if (liveEvidence) {
+    console.log("Rule K9: Checking self-lint commit pinning and byte-size integrity...");
+    const k9Errors = checkK9_SelfLintIntegrity(liveEvidence, [
+      path.join(docsDir, 'EVIDENCE.md'),
+      path.join(rootDir, 'README.md'),
+      path.join(rootDir, 'CHANGELOG.md')
+    ]);
+    allErrors.push(...k9Errors);
+  }
+
   if (allErrors.length > 0) {
     console.log("\n--- CHECKER FOUND VIOLATIONS ---");
     for (const err of allErrors) console.error(err);
@@ -431,7 +504,7 @@ function runFullChecker(options = {}) {
     return { success: false, errors: allErrors };
   }
 
-  console.log("\nALL EVIDENCE CONSISTENCY CHECKS (K1 - K8) PASSED OK!");
+  console.log("\nALL EVIDENCE CONSISTENCY CHECKS (K1 - K9) PASSED OK!");
   return { success: true, errors: [] };
 }
 
@@ -453,6 +526,7 @@ module.exports = {
   checkK6_TruncationLabels,
   checkK7_RenderedTablesByteIdentical,
   checkK8_TruncationIntegrity,
+  checkK9_SelfLintIntegrity,
   extractContractMethods,
   extractUserErrors,
   runFullChecker,
