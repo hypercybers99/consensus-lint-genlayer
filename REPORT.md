@@ -246,8 +246,8 @@ All reference contracts verified byte-for-byte identical to pinned sources.
 - **Contract Repository:** https://github.com/hypercybers99/consensus-lint-genlayer
 - **Contract Release Tag:** `v1.0.1` (pinned on audited commit `8b547e3a3257e5d24bf74463a5271c39d6bcb375`)
 - **Release Artifacts Archive:** `consensus-lint-app-artifacts.zip`
-  - **Archive Size:** 2,692,018 bytes
-  - **Archive SHA-256:** `22c80620a398b7f1c1a0361b15dfaaed725deb75cb48e59fdfc15ff1f10b694e`
+  - **Archive Size:** 2,692,017 bytes
+  - **Archive SHA-256:** `bace4e0c00d8b7d7334dc0c7766a01d4f8532760cb3c16d3c10ef602cddd8ba0`
 
 ---
 
